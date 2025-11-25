@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Nepal Trek Trails</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="about.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header>
+    <nav class="nav-left">
+      <ul>
+        <li><a href="dashboard.html">HOME</a></li>
+        <li><a href="packages.html">PACKAGES</a></li>
+        <li id="username-display" style="display: none;">
+          <span class="username-text">Welcome, <span id="username-name"></span></span>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="logo-center">
+      <div class="mountain-icon">⛰</div>
+      <span class="logo-text">Nepal Trek Trails</span>
+    </div>
+
+    <nav class="nav-right">
+      <ul>
+        <li><a href="blog.html">BLOGS</a></li>
+        <li><a href="about.html" class="active">ABOUT US</a></li>
+        <li><a href="contact.html">CONTACT US</a></li>
+        <li id="signout-display" style="display: none;">
+          <a href="#" onclick="signOut(); return false;" class="signout-btn">SIGN OUT</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  </header>
+
+  <!-- ABOUT HERO -->
+  <section class="about-hero" style="margin-top: 80px;">
+    <div class="about-hero-content">
+      <h1>About Nepal Trek Trails</h1>
+      <p>Your trusted partner for unforgettable Himalayan adventures</p>
+    </div>
+  </section>
+
+  <!-- ABOUT CONTENT -->
+  <section class="about-page-section">
+    <div class="about-page-container">
+      <!-- Our Story -->
+      <div class="about-section">
+        <div class="about-section-content">
+          <h2>Our Story</h2>
+          <p>Founded with a passion for adventure and a deep love for the Himalayas, Nepal Trek Trails has been guiding travelers through Nepal's most spectacular landscapes for over 15 years. What started as a small local operation has grown into one of Nepal's most trusted trekking companies.</p>
+          <p>Our journey began when our founders, experienced mountaineers and local guides, recognized the need for authentic, safe, and sustainable trekking experiences. They combined their extensive knowledge of the mountains with a commitment to responsible tourism, creating a company that truly cares about both our clients and the communities we visit.</p>
+          <p>Today, we continue to uphold these values while expanding our offerings to include a wide range of trekking routes, from beginner-friendly trails to challenging high-altitude adventures.</p>
+        </div>
+        <div class="about-section-image">
+          <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Our Story">
+        </div>
+      </div>
+
+      <!-- Our Mission & Vision -->
+      <div class="about-section reverse">
+        <div class="about-section-image">
+          <img src="https://www.nepaltrekhub.com/wp-content/uploads/2020/12/tilicho-lake-trek.jpg" alt="Our Mission">
+        </div>
+        <div class="about-section-content">
+          <h2>Our Mission</h2>
+          <p>To provide safe, authentic, and transformative trekking experiences that connect travelers with the natural beauty and rich culture of Nepal. We are committed to:</p>
+          <ul>
+            <li>Ensuring the highest safety standards for all our trekkers</li>
+            <li>Promoting sustainable and responsible tourism practices</li>
+            <li>Supporting local communities and preserving cultural heritage</li>
+            <li>Creating memorable experiences that inspire a love for adventure</li>
+          </ul>
+
+          <h2>Our Vision</h2>
+          <p>To be the leading trekking company in Nepal, recognized for our commitment to excellence, sustainability, and authentic cultural experiences. We envision a future where tourism benefits both travelers and local communities while preserving the pristine beauty of the Himalayas for generations to come.</p>
+        </div>
+      </div>
+
+      <!-- Why Choose Us -->
+      <div class="why-choose-section">
+        <h2>Why Choose Us</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Safety First</h3>
+            <p>All our guides are certified, experienced, and trained in first aid and emergency procedures. We prioritize your safety above all else.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <h3>Expert Guides</h3>
+            <p>Our team consists of local guides with extensive knowledge of the mountains, culture, and best routes for an authentic experience.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <h3>Eco-Friendly</h3>
+            <p>We practice Leave No Trace principles and support environmental conservation efforts in the regions we visit.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <h3>Community Support</h3>
+            <p>We work directly with local communities, ensuring that tourism benefits the people who call these mountains home.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h3>Quality Service</h3>
+            <p>From planning to execution, we ensure every detail is taken care of for a seamless and enjoyable experience.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h3>Authentic Experiences</h3>
+            <p>We offer genuine cultural interactions and off-the-beaten-path adventures that create lasting memories.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Our Team -->
+      <div class="team-section">
+        <h2>Meet Our Team</h2>
+        <p class="team-intro">Our experienced team of guides and support staff are dedicated to making your trekking adventure unforgettable.</p>
+        <div class="team-grid">
+          <div class="team-member">
+            <div class="team-image">
+              <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Team Member">
+            </div>
+            <h3>Sherpa Tenzing</h3>
+            <p class="team-role">Lead Guide & Founder</p>
+            <p class="team-bio">20+ years of experience in the Himalayas. Certified mountaineer and expert in high-altitude trekking.</p>
+          </div>
+
+          <div class="team-member">
+            <div class="team-image">
+              <img src="https://www.nepaltrekhub.com/wp-content/uploads/2020/12/tilicho-lake-trek.jpg" alt="Team Member">
+            </div>
+            <h3>Lakpa Sherpa</h3>
+            <p class="team-role">Senior Guide</p>
+            <p class="team-bio">Specializes in Everest region treks. Fluent in multiple languages and passionate about sharing local culture.</p>
+          </div>
+
+          <div class="team-member">
+            <div class="team-image">
+              <img src="https://completewellbeing.com/wp-content/uploads/2014/04/discover-the-beauty-of-trekking.jpg" alt="Team Member">
+            </div>
+            <h3>Mingma Tamang</h3>
+            <p class="team-role">Operations Manager</p>
+            <p class="team-bio">Ensures smooth operations and logistics. Expert in route planning and emergency coordination.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="stats-section">
+        <h2>Our Achievements</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Happy Trekkers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="stat-number">15+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-route"></i></div>
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Trekking Routes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-star"></i></div>
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Satisfaction Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

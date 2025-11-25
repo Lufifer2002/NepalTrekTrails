@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trekking web App</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet"href="packages.css">
+  <link rel="stylesheet"href="blog.css">
+  <link rel="stylesheet"href="about.css">
+  <link rel="stylesheet"href="contact.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+
+  // Nav bar
+  <header>
+    <nav class="nav-left">
+      <ul>
+        <li><a href="#" class="active">HOME</a></li>
+        <li><a href="packages.html">PACKAGES</a></li>
+        <li id="username-display" style="display: none;">
+          <span class="username-text">Welcome, <span id="username-name"></span></span>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="logo-center">
+      <div class="mountain-icon">⛰</div>
+      <span class="logo-text">Nepal Trek Trails</span>
+    </div>
+
+    <nav class="nav-right">
+      <ul>
+        <li><a href="blog.html">BLOGS</a></li>
+         <li><a href="about.html">ABOUT US</a></li>
+        <li><a href="contact.html">CONTACT US</a></li>
+        <li id="signout-display" style="display: none;">
+          <a href="#" onclick="signOut(); return false;" class="signout-btn">SIGN OUT</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <div class="hero-section">
+    <div class="hero-background">
+      <div class="slides">
+        <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" class="active">
+        <img src="https://www.nepaltrekhub.com/wp-content/uploads/2020/12/tilicho-lake-trek.jpg">
+        <img src="https://completewellbeing.com/wp-content/uploads/2014/04/discover-the-beauty-of-trekking.jpg">
+        <img src="https://www.trekkersofindia.com/product/1805634489060260.webp">
+        <img src="https://api.luxuryholidaynepal.com/media/blog/banner/top-trekking-destinations-in-nepal-for-2022.jpg">
+      </div>
+    </div>
+
+    <div class="hero-overlay">
+      <p class="hero-subtitle">ALL YOU NEED ABOUT</p>
+      <h1 class="hero-title">TREKKING</h1>
+      <button class="hero-btn" onclick="window.location.href='auth.html'">Get Started</button>
+    </div>
+
+    <div class="dots">
+      <div class="dot active" onclick="currentSlide(0)"></div>
+      <div class="dot" onclick="currentSlide(1)"></div>
+      <div class="dot" onclick="currentSlide(2)"></div>
+      <div class="dot" onclick="currentSlide(3)"></div>
+      <div class="dot" onclick="currentSlide(4)"></div>
+    </div>
+  </div>
+
+  <!-- PACKAGES SECTION -->
+  <section class="packages-section" id="Packages">
+    <div class="packages-container">
+      <h2 class="packages-title">Our Trekking Packages</h2>
+      <p class="packages-subtitle">Choose from our carefully curated trekking experiences</p>
+      
+      <div class="packages-grid">
+        <div class="package-card">
+          <div class="package-image">
+            <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Everest Base Camp">
+          </div>
+          <div class="package-content">
+            <h3>Everest Base Camp Trek</h3>
+            <p class="package-duration">14 Days</p>
+            <p class="package-description">Experience the world's highest peak with this iconic trek to Everest Base Camp. Journey through Sherpa villages and witness breathtaking mountain views.</p>
+            <div class="package-price">$1,299</div>
+            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
+          </div>
+        </div>
+
+        <div class="package-card">
+          <div class="package-image">
+            <img src="https://www.nepaltrekhub.com/wp-content/uploads/2020/12/tilicho-lake-trek.jpg" alt="Annapurna Circuit">
+          </div>
+          <div class="package-content">
+            <h3>Annapurna Circuit Trek</h3>
+            <p class="package-duration">18 Days</p>
+            <p class="package-description">A diverse trek through varied landscapes, cultures, and stunning mountain views. One of the most popular treks in Nepal.</p>
+            <div class="package-price">$1,499</div>
+            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
+          </div>
+        </div>
+
+        <div class="package-card">
+          <div class="package-image">
+            <img src="https://completewellbeing.com/wp-content/uploads/2014/04/discover-the-beauty-of-trekking.jpg" alt="Langtang Valley">
+          </div>
+          <div class="package-content">
+            <h3>Langtang Valley Trek</h3>
+            <p class="package-duration">10 Days</p>
+            <p class="package-description">A beautiful valley trek with rich culture and breathtaking mountain scenery. Perfect for those seeking a shorter trek.</p>
+            <div class="package-price">$899</div>
+            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
+          </div>
+        </div>
+
+        <div class="package-card">
+          <div class="package-image">
+            <img src="https://www.trekkersofindia.com/product/1805634489060260.webp" alt="Manaslu Circuit">
+          </div>
+          <div class="package-content">
+            <h3>Manaslu Circuit Trek</h3>
+            <p class="package-duration">16 Days</p>
+            <p class="package-description">A challenging trek around the eighth highest mountain in the world. Experience remote trails and authentic culture.</p>
+            <div class="package-price">$1,399</div>
+            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
+          </div>
+        </div>
+
+        <div class="package-card">
+          <div class="package-image">
+            <img src="https://api.luxuryholidaynepal.com/media/blog/banner/top-trekking-destinations-in-nepal-for-2022.jpg" alt="Upper Mustang">
+          </div>
+          <div class="package-content">
+            <h3>Upper Mustang Trek</h3>
+            <p class="package-duration">12 Days</p>
+            <p class="package-description">Explore the forbidden kingdom with its unique Tibetan culture and landscapes. A truly unique experience.</p>
+            <div class="package-price">$1,199</div>
+            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
+          </div>
+        </div>
+
+        <div class="package-card">
+          <div class="package-image">
+            <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Gokyo Lakes">
+          </div>
+          <div class="package-content">
+            <h3>Gokyo Lakes Trek</h3>
+            <p class="package-duration">13 Days</p>
+            <p class="package-description">Visit the stunning turquoise lakes and enjoy panoramic mountain views including Everest and other peaks.</p>
+            <div class="package-price">$1,149</div>
+            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG SECTION -->
+  <section class="blog-section" id="blogs">
+    <div class="blog-container">
+      <h2 class="blog-section-title">Latest Blog Posts</h2>
+      <p class="blog-section-subtitle">Read about amazing trekking experiences and travel tips</p>
+      
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-image">
+            <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Everest Base Camp Guide">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span class="blog-date"><i class="fas fa-calendar"></i> March 15, 2024</span>
+              <span class="blog-author"><i class="fas fa-user"></i> Admin</span>
+            </div>
+            <h3 class="blog-title">Complete Guide to Everest Base Camp Trek</h3>
+            <p class="blog-excerpt">Everything you need to know before embarking on the journey to the world's highest peak. From preparation to what to expect...</p>
+            <a href="blog.html#post1" class="blog-read-more">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </article>
+
+        <article class="blog-card">
+          <div class="blog-image">
+            <img src="https://www.nepaltrekhub.com/wp-content/uploads/2020/12/tilicho-lake-trek.jpg" alt="Best Time to Trek">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span class="blog-date"><i class="fas fa-calendar"></i> March 10, 2024</span>
+              <span class="blog-author"><i class="fas fa-user"></i> Admin</span>
+            </div>
+            <h3 class="blog-title">Best Time to Trek in Nepal</h3>
+            <p class="blog-excerpt">Discover the perfect seasons for trekking in Nepal. Learn about weather conditions, peak seasons, and what to expect...</p>
+            <a href="blog.html#post2" class="blog-read-more">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </article>
+
+        <article class="blog-card">
+          <div class="blog-image">
+            <img src="https://completewellbeing.com/wp-content/uploads/2014/04/discover-the-beauty-of-trekking.jpg" alt="Trekking Essentials">
+          </div>
+          <div class="blog-content">
+            <div class="blog-meta">
+              <span class="blog-date"><i class="fas fa-calendar"></i> March 5, 2024</span>
+              <span class="blog-author"><i class="fas fa-user"></i> Admin</span>
+            </div>
+            <h3 class="blog-title">Essential Gear for High Altitude Trekking</h3>
+            <p class="blog-excerpt">A comprehensive checklist of must-have items for your trekking adventure. Don't miss these essential items...</p>
+            <a href="blog.html#post3" class="blog-read-more">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </article>
+      </div>
+
+      <div class="blog-view-all">
+        <a href="blog.html" class="view-all-btn">View All Blogs <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+
+   <!-- ABOUT US SECTION -->
+  <section class="about-us" id="about">
+    <div class="about-container">
+      <div class="about-header">
+        <h2 class="about-title">About Nepal Trek Trails</h2>
+        <p class="about-subtitle">Your trusted partner for Himalayan adventures</p>
+      </div>
+
+      <div class="about-content">
+        <div class="about-text">
+          <div class="about-intro">
+            <h3>Who We Are</h3>
+            <p>Nepal Trek Trails is a premier trekking and adventure company specializing in unforgettable experiences in the majestic Himalayas. With years of expertise and a passion for adventure, we guide travelers through some of the world's most breathtaking landscapes.</p>
+          </div>
+
+          <div class="about-mission">
+            <h3>Our Mission</h3>
+            <p>To provide safe, authentic, and transformative trekking experiences that connect travelers with the natural beauty and rich culture of Nepal while promoting sustainable tourism and supporting local communities.</p>
+          </div>
+
+          <div class="about-values">
+            <h3>Our Values</h3>
+            <div class="values-grid">
+              <div class="value-item">
+                <i class="fas fa-shield-alt"></i>
+                <h4>Safety First</h4>
+                <p>Your safety is our top priority. All our guides are certified and experienced.</p>
+              </div>
+              <div class="value-item">
+                <i class="fas fa-leaf"></i>
+                <h4>Sustainable Tourism</h4>
+                <p>We promote eco-friendly practices and support local communities.</p>
+              </div>
+              <div class="value-item">
+                <i class="fas fa-heart"></i>
+                <h4>Authentic Experiences</h4>
+                <p>We offer genuine cultural interactions and off-the-beaten-path adventures.</p>
+              </div>
+              <div class="value-item">
+                <i class="fas fa-users"></i>
+                <h4>Expert Guides</h4>
+                <p>Our team consists of experienced local guides who know the mountains.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-image">
+          <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Nepal Trekking">
+        </div>
+      </div>
+
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Happy Trekkers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">Trekking Routes</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Satisfaction Rate</div>
+        </div>
+      </div>
+
+      <div class="about-cta">
+        <a href="about.html" class="about-btn">Learn More About Us <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+    <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <!-- Company Info -->
+        <div class="footer-section">
+          <h2 class="footer-title">Nepal Trek Trails</h2>
+          <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures. We specialize in safe, authentic, and transformative trekking experiences.</p>
+          <div class="social-links">
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook">
+                <i class="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+              </a>
+              <a href="#" class="social-link" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+              </a>
+              <a href="#" class="social-link" aria-label="Twitter">
+                <i class="fab fa-twitter"></i>
+                <span>Twitter</span>
+              </a>
+              <a href="#" class="social-link" aria-label="YouTube">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+              </a>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3 class="footer-title">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="packages.html">Packages</a></li>
+            <li><a href="blog.html">Blogs</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="footer-section">
+          <h3 class="footer-title">Contact Info</h3>
+          <ul class="contact-info">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Thamel, Kathmandu, Nepal</span>
+            </li>
+            <li>
+              <i class="fas fa-phone"></i>
+              <span>+977-1-1234567</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>info@nepaltrektrails.com</span>
+            </li>
+            <li>
+              <i class="fas fa-clock"></i>
+              <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-section">
+          <h3 class="footer-title">Newsletter</h3>
+          <p class="footer-description">Subscribe to get updates on new packages and trekking tips.</p>
+          <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+            <input type="email" placeholder="Enter your email" required>
+            <button type="submit" class="newsletter-btn">Subscribe</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024 Nepal Trek Trails. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="dashboard.js"></script>
+</body>
+</html>

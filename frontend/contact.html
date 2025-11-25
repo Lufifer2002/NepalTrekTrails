@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Nepal Trek Trails</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="contact.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header>
+    <nav class="nav-left">
+      <ul>
+        <li><a href="dashboard.html">HOME</a></li>
+        <li><a href="packages.html">PACKAGES</a></li>
+        <li id="username-display" style="display: none;">
+          <span class="username-text">Welcome, <span id="username-name"></span></span>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="logo-center">
+      <div class="mountain-icon">⛰</div>
+      <span class="logo-text">Nepal Trek Trails</span>
+    </div>
+
+    <nav class="nav-right">
+      <ul>
+        <li><a href="blog.html">BLOGS</a></li>
+        <li><a href="about.html">ABOUT US</a></li>
+        <li><a href="contact.html" class="active">CONTACT US</a></li>
+        <li id="signout-display" style="display: none;">
+          <a href="#" onclick="signOut(); return false;" class="signout-btn">SIGN OUT</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  </header>
+
+  <!-- CONTACT HERO -->
+  <section class="contact-hero" style="margin-top: 80px;">
+    <div class="contact-hero-content">
+      <h1>Get In Touch</h1>
+      <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section class="contact-section">
+    <div class="contact-container">
+      <div class="contact-wrapper">
+        <!-- Contact Information -->
+        <div class="contact-info-section">
+          <h2>Contact Information</h2>
+          <p class="contact-intro">Feel free to reach out to us through any of the following channels. We're here to help you plan your perfect trekking adventure.</p>
+
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="contact-text">
+                <h3>Address</h3>
+                <p>Thamel, Kathmandu<br>Nepal</p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div class="contact-text">
+                <h3>Phone</h3>
+                <p>+977-1-1234567<br>+977-9801234567</p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div class="contact-text">
+                <h3>Email</h3>
+                <p>info@nepaltrektrails.com<br>support@nepaltrektrails.com</p>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="contact-text">
+                <h3>Business Hours</h3>
+                <p>Monday - Saturday: 9:00 AM - 6:00 PM<br>Sunday: 10:00 AM - 4:00 PM</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="social-section">
+            <h3>Follow Us</h3>
+            <div class="social-links">
+              <a href="#" class="social-link" aria-label="Facebook">
+                <i class="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+              </a>
+              <a href="#" class="social-link" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+              </a>
+              <a href="#" class="social-link" aria-label="Twitter">
+                <i class="fab fa-twitter"></i>
+                <span>Twitter</span>
+              </a>
+              <a href="#" class="social-link" aria-label="YouTube">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-section">
+          <h2>Send us a Message</h2>
+          <form class="contact-form" id="contactForm" onsubmit="handleContactSubmit(event)">
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Subject *</label>
+              <input type="text" id="subject" name="subject" placeholder="What is this regarding?" required>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message *</label>
+              <textarea id="message" name="message" rows="6" placeholder="Tell us how we can help you..." required></textarea>
+            </div>
+
+            <button type="submit" class="contact-submit-btn">
+              <span>Send Message</span>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+
+            <p id="form-message" class="form-message"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Map Section -->
+      <div class="map-section">
+        <h2>Find Us</h2>
+        <div class="map-container">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.4567890123456!2d85.3103!3d27.7172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb5137a1bf416d9a!2sThamel%2C%20Kathmandu%2044600%2C%20Nepal!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus" 
+            width="100%" 
+            height="400" 
+            style="border:0; border-radius: 12px;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3 class="footer-title">Nepal Trek Trails</h3>
+          <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures.</p>
+        </div>
+        <div class="footer-section">
+          <h3 class="footer-title">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="packages.html">Packages</a></li>
+            <li><a href="blog.html">Blogs</a></li>
+            <li><a href="about.html">About Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3 class="footer-title">Contact</h3>
+          <ul class="contact-info">
+            <li><i class="fas fa-map-marker-alt"></i> Thamel, Kathmandu</li>
+            <li><i class="fas fa-phone"></i> +977-1-1234567</li>
+            <li><i class="fas fa-envelope"></i> info@nepaltrektrails.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 Nepal Trek Trails. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="dashboard.js"></script>
+  <script src="contact.js"></script>
+</body>
+</html>
