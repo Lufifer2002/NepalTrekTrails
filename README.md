@@ -1,45 +1,51 @@
-# NepalTrekTrails
+# Nepal Trek Trails
 
 A web application for booking trekking packages in Nepal.
 
 ## Setup Instructions
 
-1. Clone the repository to your local server directory (e.g., htdocs for XAMPP)
-2. Create a MySQL database named `nepal_trek`
-3. Execute the SQL script in `Backend/init.sql` to create the required tables
-4. Ensure your database configuration in `Backend/config.php` matches your environment
-5. Access the application through your web browser
+1. Make sure XAMPP is installed and running
+2. Place this project folder in your XAMPP htdocs directory
+3. Start Apache in XAMPP Control Panel
+4. Access the setup page at: http://localhost/NepalTrekTrails/setup_database.html
+5. Click "Run Database Setup" to create the database tables
+6. Click "Insert Sample Data" to add sample packages and an admin user
+7. Visit the dashboard at: http://localhost/NepalTrekTrails/frontend/dashboard.html
 
-## Database Configuration
+## Database Credentials
 
-The default configuration in `Backend/config.php` is:
+The application uses the following database credentials (configured in `Backend/config.php`):
 - Host: localhost
 - Database: nepal_trek
 - Username: root
 - Password: (empty)
 
-Update these values if your database configuration is different.
+Make sure MySQL is running in XAMPP.
 
-## Authentication
+## Default Admin Account
 
-The application includes a complete authentication system with:
-- User registration
-- User login
-- Session management using localStorage
-- Protected pages that display user information
+After inserting sample data, you can log in with:
+- Email: admin@nepaltrektrails.com
+- Password: SecurePass!2025
 
-## Features
+## File Structure
 
-- Browse trekking packages
-- View package details
-- Book trekking packages
-- Contact form
-- Newsletter subscription
-- Responsive design for all devices
+- `frontend/` - Contains all front-end files (HTML, CSS, JavaScript)
+- `Backend/` - Contains all back-end files (PHP, SQL)
+- `uploads/` - Directory for uploaded images
 
-## Technologies Used
+## Key Features
 
-- Frontend: HTML, CSS, JavaScript
-- Backend: PHP
-- Database: MySQL
-- No external frameworks or libraries (vanilla PHP/JS)
+- Dynamic package loading from database
+- User authentication
+- Package booking system
+- Blog functionality
+- Responsive design
+
+## Troubleshooting
+
+If packages don't appear on the dashboard:
+1. Make sure the database setup was completed successfully
+2. Verify that sample data was inserted
+3. Check the browser console for any JavaScript errors
+4. Ensure Apache and MySQL are running in XAMPP

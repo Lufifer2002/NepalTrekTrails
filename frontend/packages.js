@@ -29,11 +29,23 @@ async function loadPackages() {
         if (data.status === 'success' && data.packages && data.packages.length > 0) {
             displayPackages(data.packages);
         } else {
-            packagesGrid.innerHTML = '<div class="no-packages">No packages available at the moment. Please check back later.</div>';
+            packagesGrid.innerHTML = `
+                            <div class="no-packages">
+                                <i class="fas fa-box-open"></i>
+                                <h3>No Packages Available</h3>
+                                <p>No trekking packages are currently available. Please check back later or contact us for more information.</p>
+                            </div>
+                        `;
         }
     } catch (error) {
         console.error('Error loading packages:', error);
-        packagesGrid.innerHTML = '<div class="error">Failed to load packages. Please try again later.</div>';
+        packagesGrid.innerHTML = `
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Error Loading Packages</h3>
+                            <p>Failed to load trekking packages. Please try again later or contact support if the problem persists.</p>
+                        </div>
+                    `;
     }
 }
 
@@ -55,9 +67,7 @@ function displayPackages(packages) {
                 <h3>${package.name}</h3>
                 <span class="package-duration">${package.duration} days</span>
                 <p class="package-description">${package.description}</p>
-                <div class="package-price-wrapper">
-                    <div class="package-price">$${parseFloat(package.price).toFixed(2)}</div>
-                </div>
+                <div class="package-price">$${parseFloat(package.price).toFixed(2)}</div>
                 <button class="package-btn" onclick="viewPackageDetails(${package.id})">
                     <span>View Details</span>
                 </button>

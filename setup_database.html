@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Setup - Nepal Trek Trails</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            background-color: #ecf0f1;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 10px 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .button.secondary {
+            background-color: #95a5a6;
+        }
+        .button.secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .instructions {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Database Setup for Nepal Trek Trails</h1>
+        
+        <div class="instructions">
+            <h3>Setup Instructions</h3>
+            <p>This page will help you set up the database for the Nepal Trek Trails application. Please follow these steps:</p>
+            <ol>
+                <li>Make sure XAMPP is running and Apache is started</li>
+                <li>Click the "Run Database Setup" button to create the necessary tables</li>
+                <li>Click the "Insert Sample Data" button to add sample packages</li>
+                <li>After setup, you can visit the dashboard to see the packages loaded from the database</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3>Step 1: Create Database Tables</h3>
+            <p>Click the button below to create all necessary database tables including users, packages, bookings, etc.</p>
+            <button class="button" onclick="runDatabaseSetup()">Run Database Setup</button>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Insert Sample Data</h3>
+            <p>Click the button below to insert sample packages and an admin user into the database.</p>
+            <button class="button secondary" onclick="insertSampleData()">Insert Sample Data</button>
+        </div>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="step">
+            <h3>Step 3: Visit Dashboard</h3>
+            <p>After completing the setup, visit the dashboard to see packages loaded from the database:</p>
+            <a href="frontend/dashboard.html" class="button">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        function showResult(message, isSuccess) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = 'result ' + (isSuccess ? 'success' : 'error');
+            resultDiv.style.display = 'block';
+        }
+        
+        async function runDatabaseSetup() {
+            try {
+                const response = await fetch('Backend/run_database_setup.php');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showResult('Database setup completed successfully! Tables created.', true);
+                } else {
+                    showResult('Database setup failed: ' + data.message, false);
+                }
+            } catch (error) {
+                showResult('Error: ' + error.message, false);
+            }
+        }
+        
+        async function insertSampleData() {
+            try {
+                const response = await fetch('Backend/insert_sample_data.php');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showResult('Sample data inserted successfully! Packages and admin user added.', true);
+                } else {
+                    showResult('Failed to insert sample data: ' + data.message, false);
+                }
+            } catch (error) {
+                showResult('Error: ' + error.message, false);
+            }
+        }
+    </script>
+</body>
+</html>

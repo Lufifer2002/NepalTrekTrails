@@ -218,6 +218,72 @@
   box-shadow: 0 4px 15px rgba(11, 125, 58, 0.2);
 }
 
+/* No packages and error message styles */
+.no-packages, .error-message {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+.no-packages i, .error-message i {
+  font-size: 48px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.no-packages i {
+  color: #0b7d3a;
+}
+
+.error-message i {
+  color: #e74c3c;
+}
+
+.no-packages h3, .error-message h3 {
+  font-size: 24px;
+  color: #1a1a1a;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.no-packages p, .error-message p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 18px;
+  color: #666;
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+.loading::after {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(11, 125, 58, 0.2);
+  border-top: 3px solid #0b7d3a;
+  border-radius: 50%;
+  margin-left: 10px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .package-btn::before {
   content: '';
   position: absolute;

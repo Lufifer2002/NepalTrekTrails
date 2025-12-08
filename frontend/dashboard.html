@@ -87,84 +87,8 @@
       <h2 class="packages-title">Our Trekking Packages</h2>
       <p class="packages-subtitle">Choose from our carefully curated trekking experiences</p>
       
-      <div class="packages-grid">
-        <div class="package-card">
-          <div class="package-image">
-            <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Everest Base Camp">
-          </div>
-          <div class="package-content">
-            <h3>Everest Base Camp Trek</h3>
-            <p class="package-duration">14 Days</p>
-            <p class="package-description">Experience the world's highest peak with this iconic trek to Everest Base Camp. Journey through Sherpa villages and witness breathtaking mountain views.</p>
-            <div class="package-price">$1,299</div>
-            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
-          </div>
-        </div>
-
-        <div class="package-card">
-          <div class="package-image">
-            <img src="https://www.nepaltrekhub.com/wp-content/uploads/2020/12/tilicho-lake-trek.jpg" alt="Annapurna Circuit">
-          </div>
-          <div class="package-content">
-            <h3>Annapurna Circuit Trek</h3>
-            <p class="package-duration">18 Days</p>
-            <p class="package-description">A diverse trek through varied landscapes, cultures, and stunning mountain views. One of the most popular treks in Nepal.</p>
-            <div class="package-price">$1,499</div>
-            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
-          </div>
-        </div>
-
-        <div class="package-card">
-          <div class="package-image">
-            <img src="https://completewellbeing.com/wp-content/uploads/2014/04/discover-the-beauty-of-trekking.jpg" alt="Langtang Valley">
-          </div>
-          <div class="package-content">
-            <h3>Langtang Valley Trek</h3>
-            <p class="package-duration">10 Days</p>
-            <p class="package-description">A beautiful valley trek with rich culture and breathtaking mountain scenery. Perfect for those seeking a shorter trek.</p>
-            <div class="package-price">$899</div>
-            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
-          </div>
-        </div>
-
-        <div class="package-card">
-          <div class="package-image">
-            <img src="https://www.trekkersofindia.com/product/1805634489060260.webp" alt="Manaslu Circuit">
-          </div>
-          <div class="package-content">
-            <h3>Manaslu Circuit Trek</h3>
-            <p class="package-duration">16 Days</p>
-            <p class="package-description">A challenging trek around the eighth highest mountain in the world. Experience remote trails and authentic culture.</p>
-            <div class="package-price">$1,399</div>
-            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
-          </div>
-        </div>
-
-        <div class="package-card">
-          <div class="package-image">
-            <img src="https://api.luxuryholidaynepal.com/media/blog/banner/top-trekking-destinations-in-nepal-for-2022.jpg" alt="Upper Mustang">
-          </div>
-          <div class="package-content">
-            <h3>Upper Mustang Trek</h3>
-            <p class="package-duration">12 Days</p>
-            <p class="package-description">Explore the forbidden kingdom with its unique Tibetan culture and landscapes. A truly unique experience.</p>
-            <div class="package-price">$1,199</div>
-            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
-          </div>
-        </div>
-
-        <div class="package-card">
-          <div class="package-image">
-            <img src="https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg" alt="Gokyo Lakes">
-          </div>
-          <div class="package-content">
-            <h3>Gokyo Lakes Trek</h3>
-            <p class="package-duration">13 Days</p>
-            <p class="package-description">Visit the stunning turquoise lakes and enjoy panoramic mountain views including Everest and other peaks.</p>
-            <div class="package-price">$1,149</div>
-            <button class="package-btn" onclick="window.location.href='packages.html'">View Details</button>
-          </div>
-        </div>
+      <div class="packages-grid" id="packagesGrid">
+        <!-- Packages will be loaded dynamically from the database -->
       </div>
     </div>
   </section>
@@ -384,6 +308,13 @@
     </div>
   </footer>
   <script src="dashboard.js"></script>
-  <script src="auth.js"></script>
+  <script src="packages.js"></script>
+  <script>
+// Load packages when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Load packages from backend
+  loadPackages();
+});
+</script>
 </body>
 </html>
