@@ -121,38 +121,31 @@
 
 .social-links {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .social-link {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 12px 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #ecf0f1;
   text-decoration: none;
-  color: #333;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
 }
 
 .social-link:hover {
-  background: linear-gradient(135deg, #0b7d3a, #ff6600);
-  color: white;
-  transform: translateX(5px);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #3498db;
+  transform: translateY(-3px);
 }
 
 .social-link i {
-  font-size: 20px;
-  width: 24px;
-  text-align: center;
-}
-
-.social-link span {
-  font-weight: 600;
+  font-size: 18px;
 }
 
 .contact-form-section {

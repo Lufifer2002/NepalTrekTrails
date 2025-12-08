@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blogs - Nepal Trek Trails</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-left">
+            <ul>
+                <li><a href="dashboard.html">HOME</a></li>
+                <li><a href="packages.html">PACKAGES</a></li>
+                <li id="username-display" style="display: none;">
+                    <span class="username-text">Welcome, <span id="username-name"></span></span>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo-center">
+            <div class="mountain-icon">⛰</div>
+            <span class="logo-text">Nepal Trek Trails</span>
+        </div>
+
+        <nav class="nav-right">
+            <ul>
+                <li><a href="blog.html">BLOGS</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+                <div class="profile-container">
+                    <div class="profile-icon" id="profileBtn">
+                        <img src="images/profile.jpg" alt="Profile">
+                    </div>
+                    <div class="dropdown" id="dropdownMenu">
+                        <ul>
+                            <li><a href="my-bookings.html">My Booking</a></li>
+                            <li><a href="my-blogs.html">My Blogs</a></li>
+                            <li><a href="#" class="signout">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </ul>
+        </nav>
+
+        <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    </header>
+
+    <div class="breadcrumb-container">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="dashboard.html">Home</a>
+                <span class="separator">/</span>
+                <span class="current">My Blogs</span>
+            </nav>
+        </div>
+    </div>
+
+    <section class="my-bookings-section">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div>
+                    <h1 class="section-title">My Blogs</h1>
+                    <p class="section-subtitle">Manage your travel stories and blog posts</p>
+                </div>
+                <a href="create-blog.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create New Blog
+                </a>
+            </div>
+            
+            <div class="bookings-container">
+                <div id="blogsList" class="bookings-list">
+                    <!-- Blogs will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Nepal Trek Trails</h3>
+                    <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Home</a></li>
+                        <li><a href="packages.html">Packages</a></li>
+                        <li><a href="blog.html">Blogs</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> <span>Thamel, Kathmandu, Nepal</span></li>
+                        <li><i class="fas fa-phone"></i> <span>+977-1-1234567</span></li>
+                        <li><i class="fas fa-envelope"></i> <span>info@nepaltrektrails.com</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nepal Trek Trails. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="dashboard.js"></script>
+    <script src="my-blogs.js"></script>
+</body>
+</html>

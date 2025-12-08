@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us - Nepal Trek Trails</title>
   <link rel="stylesheet" href="dashboard.css">
   <link rel="stylesheet" href="contact.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <!-- NAVBAR -->
   <header>
@@ -31,10 +32,21 @@
         <li><a href="blog.html">BLOGS</a></li>
         <li><a href="about.html">ABOUT US</a></li>
         <li><a href="contact.html" class="active">CONTACT US</a></li>
-        <li id="signout-display" style="display: none;">
-          <a href="#" onclick="signOut(); return false;" class="signout-btn">SIGN OUT</a>
-        </li>
-      </ul>
+        <!-- Profile Wrapper -->
+    <div class="profile-container">
+      <div class="profile-icon" id="profileBtn">
+        <img src="images/profile.jpg" alt="Profile">
+      </div>
+
+      <!-- DROPDOWN -->
+      <div class="dropdown" id="dropdownMenu">
+        <ul>
+          <li><a href="my-bookings.html">My Booking</a></li>
+          <li><a href="#">My Blogs</a></li>
+          <li><a href="#" class="signout">Sign Out</a></li>
+        </ul>
+      </div>
+    </div>
     </nav>
 
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -183,30 +195,79 @@
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-content">
+        <!-- Company Info -->
         <div class="footer-section">
-          <h3 class="footer-title">Nepal Trek Trails</h3>
-          <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures.</p>
+          <h3>Nepal Trek Trails</h3>
+          <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures. We specialize in safe, authentic, and transformative trekking experiences with local experts.</p>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </div>
         </div>
+
+        <!-- Quick Links -->
         <div class="footer-section">
-          <h3 class="footer-title">Quick Links</h3>
+          <h3>Quick Links</h3>
           <ul class="footer-links">
             <li><a href="dashboard.html">Home</a></li>
-            <li><a href="packages.html">Packages</a></li>
-            <li><a href="blog.html">Blogs</a></li>
-            <li><a href="about.html">About Us</a></li>
+            <li><a href="packages.html">Adventure Packages</a></li>
+            <li><a href="blog.html">Travel Blog</a></li>
+            <li><a href="about.html">About Our Team</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
           </ul>
         </div>
+
+        <!-- Contact Information -->
         <div class="footer-section">
-          <h3 class="footer-title">Contact</h3>
+          <h3>Contact Info</h3>
           <ul class="contact-info">
-            <li><i class="fas fa-map-marker-alt"></i> Thamel, Kathmandu</li>
-            <li><i class="fas fa-phone"></i> +977-1-1234567</li>
-            <li><i class="fas fa-envelope"></i> info@nepaltrektrails.com</li>
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Thamel, Kathmandu, Nepal</span>
+            </li>
+            <li>
+              <i class="fas fa-phone"></i>
+              <span>+977-1-1234567</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>info@nepaltrektrails.com</span>
+            </li>
+            <li>
+              <i class="fas fa-clock"></i>
+              <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
+            </li>
           </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="footer-section">
+          <h3>Join Our Community</h3>
+          <p class="footer-description">Subscribe to receive exclusive trekking tips, special offers, and inspiring stories from the Himalayas.</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit" class="newsletter-btn">Subscribe Now</button>
+          </form>
         </div>
       </div>
+
       <div class="footer-bottom">
-        <p>&copy; 2024 Nepal Trek Trails. All rights reserved.</p>
+        <p>&copy; 2024 Nepal Trek Trails. All rights reserved. Crafted with passion for adventure.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms & Conditions</a>
+          <a href="#">Sustainability</a>
+        </div>
       </div>
     </div>
   </footer>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Blog - Nepal Trek Trails</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="blog.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .create-blog-section {
+            padding: 40px 0;
+            background: #f8f9fa;
+            min-height: 100vh;
+            margin-top: 80px;
+        }
+        
+        .create-blog-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .create-blog-header {
+            margin-bottom: 30px;
+        }
+        
+        .create-blog-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .create-blog-header p {
+            color: #7f8c8d;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .form-group textarea {
+            min-height: 300px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        
+        .info-box p {
+            margin: 0;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="nav-left">
+            <ul>
+                <li><a href="dashboard.html">HOME</a></li>
+                <li><a href="packages.html">PACKAGES</a></li>
+                <li id="username-display" style="display: none;">
+                    <span class="username-text">Welcome, <span id="username-name"></span></span>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo-center">
+            <div class="mountain-icon">⛰</div>
+            <span class="logo-text">Nepal Trek Trails</span>
+        </div>
+
+        <nav class="nav-right">
+            <ul>
+                <li><a href="blog.html">BLOGS</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+                <div class="profile-container">
+                    <div class="profile-icon" id="profileBtn">
+                        <img src="images/profile.jpg" alt="Profile">
+                    </div>
+                    <div class="dropdown" id="dropdownMenu">
+                        <ul>
+                            <li><a href="my-bookings.html">My Booking</a></li>
+                            <li><a href="my-blogs.html">My Blogs</a></li>
+                            <li><a href="#" class="signout">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </ul>
+        </nav>
+
+        <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    </header>
+
+    <section class="create-blog-section">
+        <div class="create-blog-container">
+            <div class="create-blog-header">
+                <h1><i class="fas fa-pen-fancy"></i> Create New Blog Post</h1>
+                <p>Share your trekking experiences and travel stories with the community</p>
+            </div>
+
+            <div class="info-box">
+                <p><i class="fas fa-info-circle"></i> Your blog will be reviewed by our team before being published.</p>
+            </div>
+
+            <form id="createBlogForm">
+                <div class="form-group">
+                    <label for="blogTitle">Blog Title *</label>
+                    <input type="text" id="blogTitle" required placeholder="Enter an engaging title for your blog">
+                </div>
+
+                <div class="form-group">
+                    <label for="blogCategory">Category *</label>
+                    <select id="blogCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="Trekking Guide">Trekking Guide</option>
+                        <option value="Travel Tips">Travel Tips</option>
+                        <option value="Gear Guide">Gear Guide</option>
+                        <option value="Travel Story">Travel Story</option>
+                        <option value="Culture & Heritage">Culture & Heritage</option>
+                        <option value="Photography">Photography</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="blogImage">Featured Image *</label>
+                    <input type="file" id="blogImage" accept="image/*" required>
+                    <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Upload JPG, PNG, GIF, or WEBP (Max 5MB)
+                    </small>
+                    <div id="imagePreview" style="margin-top: 15px; display: none;">
+                        <img id="previewImg" src="" alt="Preview" style="max-width: 300px; max-height: 200px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <button type="button" onclick="removeImage()" style="display: block; margin-top: 10px; background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-trash"></i> Remove Image
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="blogContent">Blog Content *</label>
+                    <textarea id="blogContent" required placeholder="Write your blog content here... Share your experiences, tips, and stories!"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='blog.html'">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Blog
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Nepal Trek Trails</h3>
+                    <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Home</a></li>
+                        <li><a href="packages.html">Packages</a></li>
+                        <li><a href="blog.html">Blogs</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> <span>Thamel, Kathmandu, Nepal</span></li>
+                        <li><i class="fas fa-phone"></i> <span>+977-1-1234567</span></li>
+                        <li><i class="fas fa-envelope"></i> <span>info@nepaltrektrails.com</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nepal Trek Trails. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="dashboard.js"></script>
+    <script src="create-blog.js"></script>
+</body>
+</html>

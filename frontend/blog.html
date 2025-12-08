@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogs - Nepal Trek Trails</title>
   <link rel="stylesheet" href="dashboard.css">
   <link rel="stylesheet" href="blog.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <!-- NAVBAR -->
   <header>
@@ -28,12 +30,23 @@
     <nav class="nav-right">
       <ul>
         <li><a href="blog.html" class="active">BLOGS</a></li>
-        <li><a href="dashboard.html#about">ABOUT US</a></li>
+        <li><a href="about.html">ABOUT US</a></li>
         <li><a href="contact.html">CONTACT US</a></li>
-        <li id="signout-display" style="display: none;">
-          <a href="#" onclick="signOut(); return false;" class="signout-btn">SIGN OUT</a>
-        </li>
-      </ul>
+        <!-- Profile Wrapper -->
+                <div class="profile-container">
+                    <div class="profile-icon" id="profileBtn">
+                        <img src="images/profile.jpg" alt="Profile">
+                    </div>
+
+                    <!-- DROPDOWN -->
+                    <div class="dropdown" id="dropdownMenu">
+                        <ul>
+                            <li><a href="my-bookings.html">My Booking</a></li>
+                            <li><a href="my-blogs.html">My Blogs</a></li>
+                            <li><a href="#" class="signout">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
     </nav>
 
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -161,6 +174,111 @@
     </div>
   </section>
 
-  <script src="dashboard.js"></script>
+  <section class="blog-section">
+        <div class="container">
+            <h2 class="section-title">Latest Travel Stories</h2>
+            <div class="blog-grid" id="blogGrid">
+                <!-- Blog posts will be loaded here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Blog Button Section -->
+    <section style="padding: 60px 0; background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%); text-align: center;">
+        <div class="container">
+            <h2 style="color: white; font-size: 2.5em; margin-bottom: 20px;">
+                <i class="fas fa-pen-nib"></i> Share Your Story
+            </h2>
+            <p style="color: #ecf0f1; font-size: 1.2em; margin-bottom: 30px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Have an amazing trekking experience to share? Write a blog post and inspire fellow adventurers!
+            </p>
+            <a href="create-blog.html" class="btn" style="background: white; color: #3498db; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.2em; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.2);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 5px 20px rgba(0,0,0,0.2)'">
+                <i class="fas fa-plus-circle"></i> Write a Blog Post
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3>Nepal Trek Trails</h3>
+                    <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures. We specialize in safe, authentic, and transformative trekking experiences with local experts.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Home</a></li>
+                        <li><a href="packages.html">Adventure Packages</a></li>
+                        <li><a href="blog.html">Travel Blog</a></li>
+                        <li><a href="about.html">About Our Team</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Thamel, Kathmandu, Nepal</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+977-1-1234567</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@nepaltrektrails.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="footer-section">
+                    <h3>Join Our Community</h3>
+                    <p class="footer-description">Subscribe to receive exclusive trekking tips, special offers, and inspiring stories from the Himalayas.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email address" required>
+                        <button type="submit" class="newsletter-btn">Subscribe Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nepal Trek Trails. All rights reserved. Crafted with passion for adventure.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Sustainability</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="dashboard.js"></script>
+    <script src="blog.js"></script>
 </body>
 </html>

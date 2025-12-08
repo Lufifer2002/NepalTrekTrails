@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Nepal Trek Trails</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Admin Panel</h2>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" data-section="packages"><i class="fas fa-mountain"></i> Packages</a></li>
+                    <li><a href="#" data-section="bookings"><i class="fas fa-calendar-check"></i> Bookings</a></li>
+                    <li><a href="#" data-section="blogs"><i class="fas fa-blog"></i> Blogs</a></li>
+                    <li><a href="#" data-section="contacts"><i class="fas fa-envelope"></i> Contacts</a></li>
+                    <li><a href="#" data-section="subscribers"><i class="fas fa-users"></i> Subscribers</a></li>
+                </ul>
+            </nav>
+            <a href="#" class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section active">
+                <div class="header">
+                    <h1>Dashboard</h1>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Total Packages</h3>
+                        <div class="count" id="total-packages">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Bookings</h3>
+                        <div class="count" id="total-bookings">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Blogs</h3>
+                        <div class="count" id="total-blogs">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Contact Messages</h3>
+                        <div class="count" id="total-contacts">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Subscribers</h3>
+                        <div class="count" id="total-subscribers">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Packages Section -->
+            <div id="packages-section" class="section">
+                <div class="section-header">
+                    <h2>Packages Management</h2>
+                    <button class="btn btn-primary" id="addPackageBtn">
+                        <i class="fas fa-plus"></i> Add Package
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Duration</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="packages-table-body">
+                            <!-- Packages will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bookings Section -->
+            <div id="bookings-section" class="section">
+                <div class="section-header">
+                    <h2>Bookings Management</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Package</th>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-table-body">
+                            <!-- Bookings will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Blogs Section -->
+            <div id="blogs-section" class="section">
+                <div class="section-header">
+                    <h2>Blog Posts Management</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="blogs-table-body">
+                            <!-- Blogs will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Contacts Section -->
+            <div id="contacts-section" class="section">
+                <div class="section-header">
+                    <h2>Contact Messages</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contacts-table-body">
+                            <!-- Contacts will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Subscribers Section -->
+            <div id="subscribers-section" class="section">
+                <div class="section-header">
+                    <h2>Newsletter Subscribers</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Email</th>
+                                <th>Subscribed Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscribers-table-body">
+                            <!-- Subscribers will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Package Modal -->
+    <div id="packageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Package</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="packageForm">
+                    <input type="hidden" id="packageId">
+                    
+                    <h4 style="margin-bottom: 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                        <i class="fas fa-info-circle"></i> Basic Information
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="packageName">Package Name *</label>
+                        <input type="text" id="packageName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="packageDescription">Description *</label>
+                        <textarea id="packageDescription" class="form-control" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group-inline">
+                        <div class="form-group">
+                            <label for="packageDuration">Duration (days) *</label>
+                            <input type="number" id="packageDuration" class="form-control" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="packagePrice">Price ($) *</label>
+                            <input type="number" id="packagePrice" class="form-control" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="packageDifficulty">Difficulty Level *</label>
+                        <select id="packageDifficulty" class="form-control" required>
+                            <option value="">Select Difficulty</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Challenging">Challenging</option>
+                            <option value="Difficult">Difficult</option>
+                            <option value="Extreme">Extreme</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="packageImage">Package Image *</label>
+                        <input type="file" id="packageImage" class="form-control" accept="image/*">
+                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Upload JPG, PNG, GIF, or WEBP (Max 5MB)
+                        </small>
+                        <div id="packageImagePreview" style="margin-top: 15px; display: none;">
+                            <img id="packagePreviewImg" src="" alt="Preview" style="max-width: 250px; max-height: 150px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <button type="button" class="btn btn-sm" onclick="removePackageImage()" style="display: block; margin-top: 10px; background: #e74c3c; color: white;">
+                                <i class="fas fa-trash"></i> Remove Image
+                            </button>
+                        </div>
+                        <input type="hidden" id="packageImageUrl">
+                    </div>
+                    
+                    <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                        <i class="fas fa-star"></i> Trek Highlights
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="trekHighlights">Trek Highlights (one per line)</label>
+                        <textarea id="trekHighlights" class="form-control" rows="5" placeholder="Enter each highlight on a new line&#10;Example:&#10;Panoramic mountain views&#10;Experienced local guides&#10;Cultural experiences"></textarea>
+                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Enter each highlight on a new line
+                        </small>
+                    </div>
+                    
+                    <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                        <i class="fas fa-route"></i> Daily Itinerary
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="dailyItinerary">Daily Itinerary (JSON format or structured text)</label>
+                        <textarea id="dailyItinerary" class="form-control" rows="6" placeholder='Enter itinerary in format:&#10;Day 1: Title | Description&#10;Day 2: Title | Description&#10;&#10;Example:&#10;Day 1: Arrival in Kathmandu | Arrive at airport and transfer to hotel&#10;Day 2: Trek to Namche | Ascend to Namche Bazaar'></textarea>
+                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Format: Day X: Title | Description (one per line)
+                        </small>
+                    </div>
+                    
+                    <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                        <i class="fas fa-check-circle"></i> What's Included
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="whatsIncluded">What's Included (one per line)</label>
+                        <textarea id="whatsIncluded" class="form-control" rows="6" placeholder="Enter each included item on a new line&#10;Example:&#10;Airport pick-up and drop-off&#10;Accommodation in Kathmandu&#10;All meals during trek"></textarea>
+                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Enter each included item on a new line
+                        </small>
+                    </div>
+                    
+                    <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                        <i class="fas fa-images"></i> Trek Gallery
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="trekGallery">Trek Gallery Images</label>
+                        <input type="file" id="trekGallery" class="form-control" accept="image/*" multiple>
+                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Upload multiple images (Max 5MB each, JPG/PNG/GIF/WEBP)
+                        </small>
+                        <div id="galleryPreview" style="margin-top: 15px; display: none;">
+                            <div id="galleryImages" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px;"></div>
+                            <button type="button" class="btn btn-sm" onclick="clearGallery()" style="margin-top: 10px; background: #e74c3c; color: white;">
+                                <i class="fas fa-trash"></i> Clear All Gallery Images
+                            </button>
+                        </div>
+                        <input type="hidden" id="galleryUrls">
+                    </div>
+                    
+                    <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                        <i class="fas fa-map-marked-alt"></i> Trek Route Map
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label for="mapImage">Trek Route Map Image</label>
+                        <input type="file" id="mapImage" class="form-control" accept="image/*">
+                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
+                            <i class="fas fa-info-circle"></i> Upload trek route map (Max 5MB, JPG/PNG/GIF/WEBP)
+                        </small>
+                        <div id="mapImagePreview" style="margin-top: 15px; display: none;">
+                            <img id="mapPreviewImg" src="" alt="Map Preview" style="max-width: 250px; max-height: 150px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <button type="button" class="btn btn-sm" onclick="removeMapImage()" style="display: block; margin-top: 10px; background: #e74c3c; color: white;">
+                                <i class="fas fa-trash"></i> Remove Map Image
+                            </button>
+                        </div>
+                        <input type="hidden" id="mapImageUrl">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelPackageBtn">Cancel</button>
+                <button class="btn btn-primary" id="savePackageBtn">Save Package</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

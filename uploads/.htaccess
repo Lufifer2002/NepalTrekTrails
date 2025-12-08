@@ -1,0 +1,9 @@
+# Allow access to uploaded images
+Options -Indexes
+Order allow,deny
+Allow from all
+
+# Set appropriate content types for images
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    Header set Content-Type "image/jpeg"
+</FilesMatch>

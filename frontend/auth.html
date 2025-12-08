@@ -3,34 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login / Register</title>
-
+  <title>Nepal Trek Trails | Login</title>
   <link rel="stylesheet" href="auth.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-
-  <div class="auth-box">
-    <h2 id="form-title">Register</h2>
-
-    <input type="text" id="name" placeholder="Full Name">
-
-    <input type="email" id="email" placeholder="Email">
-
-    <input type="password" id="password" placeholder="Password">
-
-    <input type="password" id="confirmPassword" placeholder="Confirm Password">
-
-    <button id="registerBtn">Register</button>
-    <button id="loginBtn" style="display:none;">Login</button>
-
-    <p id="toggleText">
-      Already have an account? <span onclick="showLogin()">Login</span>
-    </p>
-
-    <p id="message"></p>
+  <div class="container">
+    <!-- Left Panel with Trek Theme -->
+    <div class="left-panel">
+      <div class="background-logo"></div>
+      
+      <div class="content-overlay">
+        <!-- Top: Hello Trekker -->
+        <div class="greeting-section">
+          <h1 class="greeting-text">Hello Trekker!</h1>
+          <p class="greeting-subtext">Ready for your next adventure?</p>
+        </div>
+        
+        <!-- Bottom: Social Button -->
+        <div class="social-button-section">
+          <button class="social-button" id="socialButton">
+            <i class="fas fa-share-alt"></i>
+            <span>Connect & Share</span>
+          </button>
+          
+          <!-- Social Menu (Hidden by default) -->
+          <div class="social-menu" id="socialMenu">
+            <div class="social-menu-header">
+              <h3>Share Your Adventure</h3>
+              <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="social-icons">
+              <a href="#" class="social-icon facebook" aria-label="Facebook">
+                <i class="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+              </a>
+              <a href="#" class="social-icon twitter" aria-label="Twitter">
+                <i class="fab fa-twitter"></i>
+                <span>Twitter</span>
+              </a>
+              <a href="#" class="social-icon instagram" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+              </a>
+              <a href="#" class="social-icon youtube" aria-label="YouTube">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+              </a>
+              <a href="#" class="social-icon whatsapp" aria-label="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Panel with Login Form -->
+    <div class="right-panel">
+      <div class="form-container">
+        <div class="form-header">
+          <h2>Welcome Back</h2>
+          <p>Log in to your account to continue</p>
+        </div>
+        
+        <div class="toggle-buttons">
+          <button id="loginTab" class="tab-btn active">Login</button>
+          <button id="registerTab" class="tab-btn">Sign Up</button>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form active">
+          <div class="input-group">
+            <div class="input-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <input type="email" id="loginEmail" placeholder="Email Address" required>
+          </div>
+          
+          <div class="input-group">
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+          </div>
+          
+          <div class="remember-forgot">
+            <label class="remember-me">
+              <input type="checkbox">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-password">Forgot password?</a>
+          </div>
+          
+          <button type="button" id="loginBtn" class="submit-btn">
+            <span>Login</span>
+            <i class="fas fa-hiking"></i>
+          </button>
+        </form>
+        
+        <!-- Register Form -->
+        <form id="registerForm" class="auth-form">
+          <div class="input-group">
+            <div class="input-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <input type="text" id="registerName" placeholder="Full Name" required>
+          </div>
+          
+          <div class="input-group">
+            <div class="input-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <input type="email" id="registerEmail" placeholder="Email Address" required>
+          </div>
+          
+          <div class="input-group">
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <input type="password" id="registerPassword" placeholder="Password" required>
+          </div>
+          
+          <div class="input-group">
+            <div class="input-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <input type="password" id="registerConfirmPassword" placeholder="Confirm Password" required>
+          </div>
+          
+          <div class="terms">
+            <label>
+              <input type="checkbox" required>
+              <span>I agree to the <a href="#">Terms & Conditions</a></span>
+            </label>
+          </div>
+          
+          <button type="button" id="registerBtn" class="submit-btn">
+            <span>Start Your Trail</span>
+            <i class="fas fa-mountain"></i>
+          </button>
+        </form>
+        <div class="form-footer">
+          <p id="toggleText">
+            Don't have an account? <a href="#" id="showRegister">Sign up</a>
+          </p>
+        </div>
+        
+        <div id="message" class="message"></div>
+      </div>
+    </div>
   </div>
-
+  <script src="dashboard.js"></script>
   <script src="auth.js"></script>
 </body>
 </html>

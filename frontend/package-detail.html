@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Package Details - Nepal Trek Trails</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="packages.css">
+    <link rel="stylesheet" href="package-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="nav-left">
+            <ul>
+                <li><a href="dashboard.html">HOME</a></li>
+                <li><a href="packages.html" class="active">PACKAGES</a></li>
+                <li id="username-display" style="display: none;">
+                    <span class="username-text">Welcome, <span id="username-name"></span></span>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo-center">
+            <div class="mountain-icon">⛰</div>
+            <span class="logo-text">Nepal Trek Trails</span>
+        </div>
+
+        <nav class="nav-right">
+            <ul>
+                <li><a href="blog.html">BLOGS</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+                <!-- Profile Wrapper -->
+                <div class="profile-container">
+                    <div class="profile-icon" id="profileBtn">
+                        <img src="images/profile.jpg" alt="Profile">
+                    </div>
+
+                    <!-- DROPDOWN -->
+                    <div class="dropdown" id="dropdownMenu">
+                        <ul>
+                            <li><a href="my-bookings.html">My Booking</a></li>
+                            <li><a href="#">My Blogs</a></li>
+                            <li><a href="#" class="signout">Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+        </nav>
+
+        <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-container">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="dashboard.html">Home</a>
+                <span class="separator">/</span>
+                <a href="packages.html">Packages</a>
+                <span class="separator">/</span>
+                <span class="current" id="breadcrumbPackage">Package Details</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Package Detail Section -->
+    <section class="package-detail-section">
+        <div class="container">
+            <div class="package-detail-container">
+                <!-- Image Gallery Section -->
+                <div class="package-gallery">
+                    <div class="main-image">
+                        <img id="packageImage" src="" alt="Package Image">
+                        <div class="image-overlay">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </div>
+                    </div>
+                    <div class="thumbnail-gallery" id="thumbnailGallery">
+                        <!-- Thumbnails will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Package Info Section -->
+                <div class="package-info">
+                    <h1 id="packageName" class="package-title"></h1>
+                    
+                    <div class="package-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Duration</span>
+                                <span id="packageDuration" class="meta-value"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <i class="fas fa-mountain"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Difficulty</span>
+                                <span id="packageDifficulty" class="meta-value"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Price</span>
+                                <span class="price-amount">$<span id="packagePrice"></span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Rating</span>
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span class="rating-text">(4.7/5)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="package-highlights">
+                        <h3>Trek Highlights</h3>
+                        <ul class="highlights-list">
+                            <li><i class="fas fa-check-circle"></i> Panoramic mountain views</li>
+                            <li><i class="fas fa-check-circle"></i> Experienced local guides</li>
+                            <li><i class="fas fa-check-circle"></i> Cultural experiences</li>
+                            <li><i class="fas fa-check-circle"></i> Sustainable tourism</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="package-description">
+                        <h3>About This Trek</h3>
+                        <p id="packageDescription"></p>
+                    </div>
+                    
+                    <div class="package-actions">
+                        <button class="btn btn-primary book-now" id="bookNowBtn">
+                            <i class="fas fa-calendar-check"></i>
+                            Book This Adventure
+                        </button>
+                        <button class="btn btn-secondary wishlist-btn">
+                            <i class="far fa-heart"></i>
+                            Save for Later
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Package Information -->
+            <div class="package-additional-info">
+                <!-- Itinerary Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-route"></i> Daily Itinerary</h2>
+                        <div class="section-controls">
+                            <button class="expand-all">Expand All</button>
+                        </div>
+                    </div>
+                    <div id="packageItinerary" class="itinerary-content">
+                        <!-- Itinerary will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- What's Included Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-check-circle"></i> What's Included</h2>
+                    </div>
+                    <div id="packageIncluded" class="included-content">
+                        <!-- Included items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Gallery Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-images"></i> Trek Gallery</h2>
+                    </div>
+                    <div id="packageGallery" class="gallery-content">
+                        <!-- Gallery images will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Trek Route Map Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-map-marked-alt"></i> Trek Route Map</h2>
+                    </div>
+                    <div id="packageMap" class="map-content">
+                        <!-- Map image will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="info-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-star"></i> Traveler Reviews</h2>
+                        <div class="section-stats">
+                            <div class="rating-summary">
+                                <span class="rating-score">4.7</span>
+                                <div class="rating-stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="rating-count">(128 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="packageReviews" class="reviews-content">
+                        <!-- Reviews will be loaded here -->
+                    </div>
+                    <div class="reviews-actions">
+                        <button class="btn btn-outline">Write a Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Book Your Adventure</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="booking-package-info">
+                    <h4 id="modalPackageName"></h4>
+                    <p><i class="fas fa-clock"></i> <span id="modalPackageDuration"></span> | 
+                    <i class="fas fa-tag"></i> $<span id="modalPackagePrice"></span></p>
+                </div>
+                
+                <form id="bookingForm">
+                    <input type="hidden" id="packageId">
+                    <div class="form-group">
+                        <label for="customerName">Full Name</label>
+                        <input type="text" id="customerName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Email Address</label>
+                        <input type="email" id="customerEmail" required placeholder="your.email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Phone Number</label>
+                        <input type="tel" id="customerPhone" required placeholder="+1 (123) 456-7890">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="peopleCount">Number of People</label>
+                            <select id="peopleCount" required>
+                                <option value="1">1 Person</option>
+                                <option value="2">2 People</option>
+                                <option value="3">3 People</option>
+                                <option value="4">4 People</option>
+                                <option value="5">5+ People</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="travelDate">Preferred Travel Date</label>
+                            <input type="date" id="travelDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentOption">Payment Method</label>
+                        <select id="paymentOption" required>
+                            <option value="">Select Payment Option</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialRequests">Special Requests (Optional)</label>
+                        <textarea id="specialRequests" rows="3" placeholder="Any dietary restrictions, accessibility needs, etc."></textarea>
+                    </div>
+                    <div class="form-checkbox">
+                        <label>
+                            <input type="checkbox" required>
+                            <span>I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Cancellation Policy</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-lock"></i> Confirm Booking
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3>Nepal Trek Trails</h3>
+                    <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures. We specialize in safe, authentic, and transformative trekking experiences with local experts.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Home</a></li>
+                        <li><a href="packages.html">Adventure Packages</a></li>
+                        <li><a href="blog.html">Travel Blog</a></li>
+                        <li><a href="about.html">About Our Team</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Thamel, Kathmandu, Nepal</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+977-1-1234567</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@nepaltrektrails.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="footer-section">
+                    <h3>Join Our Community</h3>
+                    <p class="footer-description">Subscribe to receive exclusive trekking tips, special offers, and inspiring stories from the Himalayas.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email address" required>
+                        <button type="submit" class="newsletter-btn">Subscribe Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nepal Trek Trails. All rights reserved. Crafted with passion for adventure.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Sustainability</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="dashboard.js"></script>
+    <script src="package-detail.js"></script>
+</body>
+</html>

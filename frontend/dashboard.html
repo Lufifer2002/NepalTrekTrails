@@ -5,17 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Trekking web App</title>
   <link rel="stylesheet" href="dashboard.css">
-  <link rel="stylesheet"href="packages.css">
-  <link rel="stylesheet"href="blog.css">
-  <link rel="stylesheet"href="about.css">
-  <link rel="stylesheet"href="contact.css">
+  <link rel="stylesheet" href="packages.css">
+  <link rel="stylesheet" href="blog.css">
+  <link rel="stylesheet" href="about.css">
+  <link rel="stylesheet" href="contact.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
-<body>
-
-  // Nav bar
-  <header>
+<body>  
+   <header>
     <nav class="nav-left">
       <ul>
         <li><a href="#" class="active">HOME</a></li>
@@ -36,10 +34,21 @@
         <li><a href="blog.html">BLOGS</a></li>
          <li><a href="about.html">ABOUT US</a></li>
         <li><a href="contact.html">CONTACT US</a></li>
-        <li id="signout-display" style="display: none;">
-          <a href="#" onclick="signOut(); return false;" class="signout-btn">SIGN OUT</a>
-        </li>
-      </ul>
+        <!-- Profile Wrapper -->
+    <div class="profile-container">
+      <div class="profile-icon" id="profileBtn">
+        <img src="images/profile.jpg" alt="Profile">
+      </div>
+
+      <!-- DROPDOWN -->
+      <div class="dropdown" id="dropdownMenu">
+        <ul>
+          <li><a href="my-bookings.html">My Booking</a></li>
+          <li><a href="my-blogs.html">My Blogs</a></li>
+          <li><a href="#" class="signout">Sign Out</a></li>
+        </ul>
+      </div>
+    </div>
     </nav>
 
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -301,34 +310,27 @@
       <div class="footer-content">
         <!-- Company Info -->
         <div class="footer-section">
-          <h2 class="footer-title">Nepal Trek Trails</h2>
+          <h3>Nepal Trek Trails</h3>
           <p class="footer-description">Your trusted partner for unforgettable Himalayan adventures. We specialize in safe, authentic, and transformative trekking experiences.</p>
           <div class="social-links">
-            <div class="social-links">
-              <a href="#" class="social-link" aria-label="Facebook">
-                <i class="fab fa-facebook-f"></i>
-                <span>Facebook</span>
-              </a>
-              <a href="#" class="social-link" aria-label="Instagram">
-                <i class="fab fa-instagram"></i>
-                <span>Instagram</span>
-              </a>
-              <a href="#" class="social-link" aria-label="Twitter">
-                <i class="fab fa-twitter"></i>
-                <span>Twitter</span>
-              </a>
-              <a href="#" class="social-link" aria-label="YouTube">
-                <i class="fab fa-youtube"></i>
-                <span>YouTube</span>
-              </a>
-            </div>
-          </div>
+            <a href="#" class="social-link" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-link" aria-label="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
           </div>
         </div>
 
         <!-- Quick Links -->
         <div class="footer-section">
-          <h3 class="footer-title">Quick Links</h3>
+          <h3>Quick Links</h3>
           <ul class="footer-links">
             <li><a href="dashboard.html">Home</a></li>
             <li><a href="packages.html">Packages</a></li>
@@ -340,7 +342,7 @@
 
         <!-- Contact Information -->
         <div class="footer-section">
-          <h3 class="footer-title">Contact Info</h3>
+          <h3>Contact Info</h3>
           <ul class="contact-info">
             <li>
               <i class="fas fa-map-marker-alt"></i>
@@ -363,7 +365,7 @@
 
         <!-- Newsletter -->
         <div class="footer-section">
-          <h3 class="footer-title">Newsletter</h3>
+          <h3>Newsletter</h3>
           <p class="footer-description">Subscribe to get updates on new packages and trekking tips.</p>
           <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
             <input type="email" placeholder="Enter your email" required>
@@ -382,5 +384,6 @@
     </div>
   </footer>
   <script src="dashboard.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
