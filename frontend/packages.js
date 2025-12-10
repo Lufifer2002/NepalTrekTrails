@@ -67,7 +67,7 @@ function displayPackages(packages) {
                 <h3>${package.name}</h3>
                 <span class="package-duration">${package.duration} days</span>
                 <p class="package-description">${package.description}</p>
-                <div class="package-price">$${parseFloat(package.price).toFixed(2)}</div>
+                <div class="package-price">Rs ${parseFloat(package.price).toFixed(2)}</div>
                 <button class="package-btn" onclick="viewPackageDetails(${package.id})">
                     <span>View Details</span>
                 </button>
