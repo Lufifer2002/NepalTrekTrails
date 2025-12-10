@@ -40,8 +40,8 @@ try {
             travel_date,
             payment_option,
             special_requests,
-            created_at,
-            'Pending' as status
+            status,
+            created_at
         FROM bookings 
         WHERE email = ? 
         ORDER BY created_at DESC
