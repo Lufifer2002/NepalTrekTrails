@@ -30,21 +30,23 @@ try {
     // Fetch bookings for the user
     $stmt = $pdo->prepare("
         SELECT 
-            id,
-            package_id,
-            package_name,
-            customer_name,
-            email,
-            phone,
-            people_count,
-            travel_date,
-            payment_option,
-            special_requests,
-            status,
-            created_at
-        FROM bookings 
-        WHERE email = ? 
-        ORDER BY created_at DESC
+            b.id,
+            b.package_id,
+            b.package_name,
+            b.customer_name,
+            b.email,
+            b.phone,
+            b.people_count,
+            b.travel_date,
+            b.payment_option,
+            b.special_requests,
+            b.status,
+            b.created_at,
+            p.price as package_price
+        FROM bookings b
+        LEFT JOIN packages p ON b.package_id = p.id
+        WHERE b.email = ? 
+        ORDER BY b.created_at DESC
     ");
     $stmt->execute([$email]);
     $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -115,6 +115,10 @@ function displayBookings(bookings) {
                 <button class="btn btn-outline" onclick="viewBookingDetails(${booking.id})">
                     <i class="fas fa-eye"></i> View Details
                 </button>
+                ${booking.status.toLowerCase() === 'pending' && booking.payment_option === 'Esewa' ? 
+                `<button class="btn btn-primary" onclick="retryPayment(${booking.id}, ${booking.package_price || 0})">
+                    <i class="fas fa-credit-card"></i> Pay Now
+                </button>` : ''}
                 <button class="btn btn-secondary" onclick="cancelBooking(${booking.id})">
                     <i class="fas fa-times"></i> Cancel Booking
                 </button>
@@ -123,6 +127,22 @@ function displayBookings(bookings) {
     `).join('');
     
     bookingsList.innerHTML = bookingsHTML;
+}
+
+// Retry payment for a pending booking
+function retryPayment(bookingId, amount) {
+    // Generate a unique transaction ID for eSewa (booking ID + timestamp)
+    const transactionId = bookingId + '_' + Date.now();
+    
+    // Store booking info in localStorage for use after payment
+    localStorage.setItem('currentBooking', JSON.stringify({
+        booking_id: bookingId,
+        transaction_id: transactionId,
+        amount: amount
+    }));
+    
+    // Redirect to eSewa payment page with unique transaction ID
+    window.location.href = `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${amount}`;
 }
 
 // Format date
@@ -140,6 +160,7 @@ function formatDateTime(dateTimeString) {
 // Format payment method
 function formatPaymentMethod(method) {
     const methods = {
+        'Esewa': 'eSewa',
         'credit_card': 'Credit Card',
         'paypal': 'PayPal',
         'bank_transfer': 'Bank Transfer'

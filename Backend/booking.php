@@ -30,6 +30,7 @@ $phone = sanitize($data["phone"] ?? "");
 $people_count = (int)($data["people_count"] ?? 0);
 $travel_date = sanitize($data["travel_date"] ?? "");
 $payment_option = sanitize($data["payment_option"] ?? "");
+$status = sanitize($data["status"] ?? "confirmed"); // Default to confirmed unless specified
 
 // Basic validation
 if (!$package_id || !$package_name || !$customer_name || !validateEmail($email) || 
@@ -41,15 +42,15 @@ try {
     $stmt = $pdo->prepare("
         INSERT INTO bookings (
             package_id, package_name, customer_name, email, phone, 
-            people_count, travel_date, payment_option, special_requests
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            people_count, travel_date, payment_option, special_requests, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
     
     $special_requests = sanitize($data["special_requests"] ?? "");
     
     $stmt->execute([
         $package_id, $package_name, $customer_name, $email, $phone,
-        $people_count, $travel_date, $payment_option, $special_requests
+        $people_count, $travel_date, $payment_option, $special_requests, $status
     ]);
     
     jsonResponse([

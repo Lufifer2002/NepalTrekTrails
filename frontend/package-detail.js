@@ -589,29 +589,64 @@ async function submitBooking() {
             return;
         }
         
-        const response = await fetch('../Backend/booking.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(bookingData)
-        });
-        
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            alert('Booking submitted successfully! You can view your booking in "My Bookings" section.');
-            document.getElementById('bookingModal').style.display = 'none';
-            document.getElementById('bookingForm').reset();
+        // If eSewa is selected, redirect to payment page
+        if (bookingData.payment_option === 'Esewa') {
+            // First save the booking with pending status if it doesn't exist or is pending
+            const response = await fetch('../Backend/booking.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({...bookingData, status: 'pending'})
+            });
             
-            // Optionally redirect to my bookings page
-            setTimeout(() => {
-                if (confirm('Would you like to view your bookings now?')) {
-                    window.location.href = 'my-bookings.html';
-                }
-            }, 500);
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                // Generate a unique transaction ID for eSewa (booking ID + timestamp)
+                const amount = parseFloat(document.getElementById('modalPackagePrice').textContent);
+                const bookingId = data.booking_id;
+                const transactionId = bookingId + '_' + Date.now(); // Unique transaction ID
+                
+                // Store booking info in localStorage for use after payment
+                localStorage.setItem('currentBooking', JSON.stringify({
+                    booking_id: bookingId,
+                    transaction_id: transactionId,
+                    amount: amount,
+                    package_name: bookingData.package_name
+                }));
+                
+                // Redirect to eSewa payment page with unique transaction ID
+                window.location.href = `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${amount}`;
+            } else {
+                alert('Error: ' + data.message);
+            }
         } else {
-            alert('Error: ' + data.message);
+            // For other payment methods, save booking directly
+            const response = await fetch('../Backend/booking.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookingData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                alert('Booking submitted successfully! You can view your booking in "My Bookings" section.');
+                document.getElementById('bookingModal').style.display = 'none';
+                document.getElementById('bookingForm').reset();
+                
+                // Optionally redirect to my bookings page
+                setTimeout(() => {
+                    if (confirm('Would you like to view your bookings now?')) {
+                        window.location.href = 'my-bookings.html';
+                    }
+                }, 500);
+            } else {
+                alert('Error: ' + data.message);
+            }
         }
     } catch (error) {
         console.error('Error submitting booking:', error);
