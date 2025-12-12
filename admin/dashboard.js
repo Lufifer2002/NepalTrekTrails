@@ -1450,12 +1450,20 @@ function populatePackageForm(packageData) {
     // Load gallery images
     loadGalleryImages(packageData.gallery_urls || '');
     
-    // Show preview if image URL exists
+    // Show preview if package image URL exists
     if (packageData.image_url) {
         document.getElementById('packageImagePreview').style.display = 'block';
         document.getElementById('packagePreviewImg').src = packageData.image_url;
     } else {
         document.getElementById('packageImagePreview').style.display = 'none';
+    }
+    
+    // Show preview if map image URL exists
+    if (packageData.map_image_url) {
+        document.getElementById('mapImagePreview').style.display = 'block';
+        document.getElementById('mapPreviewImg').src = packageData.map_image_url;
+    } else {
+        document.getElementById('mapImagePreview').style.display = 'none';
     }
 }
 
