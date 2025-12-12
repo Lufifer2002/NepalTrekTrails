@@ -1,7 +1,19 @@
 <?php
 session_start();
+require_once "config.php";
 
 $bookingId = $_GET['bookingId'] ?? '';
+
+// Update booking status to indicate payment failure
+if (!empty($bookingId)) {
+    try {
+        $stmt = $pdo->prepare("UPDATE bookings SET status = 'payment_failed' WHERE id = ?");
+        $stmt->execute([$bookingId]);
+    } catch (PDOException $e) {
+        // Log error but continue to show failure page
+        error_log("Failed to update booking status: " . $e->getMessage());
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,7 +77,7 @@ $bookingId = $_GET['bookingId'] ?? '';
         <?php if ($bookingId): ?>
         <div class="details">
             <div><span class="label">Booking ID:</span> <?= htmlspecialchars($bookingId) ?></div>
-            <div><span class="label">Status:</span> Pending</div>
+            <div><span class="label">Status:</span> Payment Failed</div>
         </div>
         <?php endif; ?>
         

@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once "config.php";
 
 // -----------------------------
 // 1. Validate form submission
@@ -33,14 +34,46 @@ if ($amount <= 0) {
 }
 
 // -----------------------------
-// 4. Generate order ID
+// 4. Save booking to database with pending status
+// -----------------------------
+try {
+    // Get package name from database
+    $stmt = $pdo->prepare("SELECT name FROM packages WHERE id = ?");
+    $stmt->execute([$packageId]);
+    $package = $stmt->fetch(PDO::FETCH_ASSOC);
+    $packageName = $package ? $package['name'] : "Unknown Package";
+    
+    // Insert booking with pending status
+    $stmt = $pdo->prepare("
+        INSERT INTO bookings (
+            package_id, package_name, customer_name, email, phone, 
+            people_count, travel_date, payment_option, special_requests, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+    
+    $status = "pending"; // Initially set to pending
+    
+    $stmt->execute([
+        $packageId, $packageName, $customerName, $customerEmail, $customerPhone,
+        $peopleCount, $travelDate, $paymentOption, $specialRequest, $status
+    ]);
+    
+    $bookingId = $pdo->lastInsertId();
+    
+} catch (PDOException $e) {
+    die("Failed to save booking: " . $e->getMessage());
+}
+
+// -----------------------------
+// 5. Generate order ID for eSewa
 // -----------------------------
 $orderId = uniqid('ORD_');
 
 // -----------------------------
-// 5. Store booking data in session for later use
+// 6. Store booking data in session for later use
 // -----------------------------
 $_SESSION['booking'] = [
+    "bookingId"     => $bookingId, // Add actual booking ID from database
     "orderId"       => $orderId,
     "customerName"  => $customerName,
     "customerEmail" => $customerEmail,
@@ -53,14 +86,13 @@ $_SESSION['booking'] = [
 ];
 
 // -----------------------------
-// 6. Redirect to eSewa if selected
+// 7. Redirect to eSewa if selected
 // -----------------------------
 if ($paymentOption === "Esewa") {
-
     // Encode name for safe URL passing
     $encodedName = urlencode($customerName);
-
-    header("Location: esewaPay.php?orderId=$orderId&amount=$amount&customer=$encodedName");
+    
+    header("Location: esewaPay.php?orderId=$orderId&bookingId=$bookingId&amount=$amount&customer=$encodedName");
     exit;
 }
 

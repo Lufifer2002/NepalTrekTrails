@@ -2,7 +2,7 @@
 session_start();
 
 $transactionId = $_GET['orderId']; // Unique transaction ID
-$bookingId = $_GET['bookingId'];   // Original booking ID
+$bookingId = $_GET['bookingId'];   // Original booking ID from database
 $amount = $_GET['amount'];
 
 $product_code = "EPAYTEST";

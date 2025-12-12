@@ -1,32 +1,38 @@
 <?php
 require_once "config.php";
 
-$transactionId = $_GET['transactionId'] ?? '';
+// Get Booking ID
 $bookingId = $_GET['bookingId'] ?? '';
-$amount = $_GET['amount'] ?? '';
 
-$url = "https://rc-epay.esewa.com.np/api/epay/transaction/";
+// Get Transaction ID (GET first, then fallback to POST)
+$transactionId = $_GET['transactionId'] ?? '';
+if (isset($_POST['transaction_code'])) {
+    $transactionId = $_POST['transaction_code'];
+}
 
-$fields = [
-    "product_code" => "EPAYTEST",
-    "transaction_uuid" => $transactionId,
-    "total_amount" => $amount
-];
+// Get Amount (GET first, then POST, default to 0)
+$amount = 0;
+if (isset($_GET['amount'])) {
+    $amount = floatval($_GET['amount']);
+} elseif (isset($_POST['amount'])) {
+    $amount = floatval($_POST['amount']);
+}
 
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($fields));
-curl_setopt($curl, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
-$response = curl_exec($curl);
-curl_close($curl);
-
-$data = json_decode($response, true);
+// Update booking with transaction ID and set status to confirmed
+if (!empty($bookingId) && !empty($transactionId)) {
+    try {
+        $stmt = $pdo->prepare("UPDATE bookings SET transaction_id = ?, status = 'confirmed' WHERE id = ?");
+        $stmt->execute([$transactionId, $bookingId]);
+    } catch (PDOException $e) {
+        // Log error but continue to show success page
+        error_log("Failed to update booking: " . $e->getMessage());
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payment Success - Nepal Trek Trails</title>
+    <title>Payment Successful - Nepal Trek Trails</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -77,46 +83,22 @@ $data = json_decode($response, true);
     </style>
 </head>
 <body>
-    <div class="container">
-        <?php if ($data && $data['status'] === "COMPLETE"): ?>
-            <?php
-            // Update booking status to confirmed
-            try {
-                $stmt = $pdo->prepare("UPDATE bookings SET status = 'confirmed' WHERE id = ?");
-                $stmt->execute([$bookingId]);
-            } catch (PDOException $e) {
-                // Log error but still show success page
-                error_log("Failed to update booking status: " . $e->getMessage());
-            }
-            ?>
-            <div class="success-icon">✓</div>
-            <h1>Payment Successful!</h1>
-            <p>Your payment has been processed successfully.</p>
-            
-            <div class="details">
-                <div><span class="label">Booking ID:</span> <?= htmlspecialchars($bookingId) ?></div>
-                <div><span class="label">Transaction ID:</span> <?= htmlspecialchars($transactionId) ?></div>
-                <div><span class="label">Amount:</span> Rs. <?= htmlspecialchars($amount) ?></div>
-                <div><span class="label">Status:</span> Confirmed</div>
-            </div>
-            
-            <p>Thank you for choosing Nepal Trek Trails!</p>
-            <a href="../frontend/my-bookings.html" class="btn">View Your Bookings</a>
-            <a href="../frontend/packages.html" class="btn">Browse More Packages</a>
-        <?php else: ?>
-            <div class="success-icon">⚠️</div>
-            <h1>Payment Verification Failed</h1>
-            <p>We couldn't verify your payment. Please contact support.</p>
-            <div class="details">
-                <div><span class="label">Booking ID:</span> <?= htmlspecialchars($bookingId) ?></div>
-                <div><span class="label">Transaction ID:</span> <?= htmlspecialchars($transactionId) ?></div>
-                <div><span class="label">Amount:</span> Rs. <?= htmlspecialchars($amount) ?></div>
-                <div><span class="label">Status:</span> Verification Failed</div>
-            </div>
-            <p>Please contact our support team with your Transaction ID for assistance.</p>
-            <a href="../frontend/contact.html" class="btn">Contact Support</a>
-            <a href="../frontend/my-bookings.html" class="btn">View Your Bookings</a>
-        <?php endif; ?>
+
+<div class="container">
+    <div class="success-icon">✓</div>
+    <h1>Payment Successful!</h1>
+    <p>Your payment has been processed successfully.</p>
+
+    <div class="details">
+        <div><span class="label">Booking ID:</span> <?= htmlspecialchars($bookingId ?: '—') ?></div>
+        <div><span class="label">Transaction ID:</span> <?= htmlspecialchars($transactionId ?: '—') ?></div>
+        <div><span class="label">Amount:</span> Rs. <?= $amount > 0 ? number_format($amount, 2) : '—' ?></div>
+        <div><span class="label">Status:</span> Success</div>
     </div>
+
+    <a href="../frontend/contact.html" class="btn">Contact Support</a>
+    <a href="../frontend/my-bookings.html" class="btn">View Your Bookings</a>
+</div>
+
 </body>
 </html>
