@@ -1533,7 +1533,7 @@ function populateItinerary(itineraryText) {
                         <label>Description</label>
                         <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day">${escapeHtml(description)}</textarea>
                     </div>
-                    <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>×</button>
+                    <div><button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>Remove</button></div>
                 `;
             } else {
                 // If format doesn't match, just display the line in the title field
@@ -1552,7 +1552,7 @@ function populateItinerary(itineraryText) {
                         <label>Description</label>
                         <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day"></textarea>
                     </div>
-                    <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>×</button>
+                    <div><button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>Remove</button></div>
                 `;
             }
             
@@ -1588,7 +1588,7 @@ function populateIncludedItems(includedText) {
             
             newItem.innerHTML = `
                 <input type="text" class="form-control included-input" placeholder="Enter an included item" value="${escapeHtml(item)}" style="flex: 1; margin-right: 10px;">
-                <button type="button" class="btn btn-danger remove-included" onclick="removeIncludedItem(this)"${includedItems.length > 1 ? '' : ' style="display: none;"'}>×</button>
+                <div><button type="button" class="btn btn-danger remove-included" onclick="removeIncludedItem(this)"${includedItems.length > 1 ? '' : ' style="display: none;"'}>Remove</button></div>
             `;
             
             container.appendChild(newItem);
