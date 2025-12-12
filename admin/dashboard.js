@@ -199,62 +199,19 @@ async function editPackage(packageId) {
         if (data.status === 'success') {
             const packageData = data.data.find(pkg => pkg.id == packageId);
             if (packageData) {
+                // Set modal title and package ID
                 document.getElementById('modalTitle').textContent = 'Edit Package';
                 document.getElementById('packageId').value = packageData.id;
-                document.getElementById('packageName').value = packageData.name;
-                document.getElementById('packageDescription').value = packageData.description || '';
-                document.getElementById('packageDuration').value = packageData.duration || '';
-                document.getElementById('packagePrice').value = packageData.price || '';
-                document.getElementById('packageDifficulty').value = packageData.difficulty || '';
-                document.getElementById('packageImageUrl').value = packageData.image_url || '';
-                document.getElementById('trekHighlights').value = packageData.trek_highlights || '';
-                document.getElementById('dailyItinerary').value = packageData.daily_itinerary || '';
-                document.getElementById('whatsIncluded').value = packageData.whats_included || '';
-                document.getElementById('galleryUrls').value = packageData.gallery_urls || '';
-                document.getElementById('mapImageUrl').value = packageData.map_image_url || '';
                 
-                // Show existing image preview if available
-                if (packageData.image_url) {
-                    document.getElementById('packagePreviewImg').src = packageData.image_url;
-                    document.getElementById('packageImagePreview').style.display = 'block';
-                } else {
-                    document.getElementById('packageImagePreview').style.display = 'none';
-                }
+                // Use the populatePackageForm function to properly populate all fields
+                populatePackageForm(packageData);
                 
-                // Show existing gallery images if available
-                if (packageData.gallery_urls) {
-                    const galleryImages = document.getElementById('galleryImages');
-                    galleryImages.innerHTML = '';
-                    const urls = packageData.gallery_urls.split(',').filter(url => url.trim());
-                    urls.forEach((url, index) => {
-                        const imgDiv = document.createElement('div');
-                        imgDiv.style.position = 'relative';
-                        imgDiv.innerHTML = `
-                            <img src="${url.trim()}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px;">
-                            <button onclick="removeGalleryImage(${index})" style="position: absolute; top: 5px; right: 5px; background: #e74c3c; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer;">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        `;
-                        galleryImages.appendChild(imgDiv);
-                    });
-                    document.getElementById('galleryPreview').style.display = 'block';
-                } else {
-                    document.getElementById('galleryPreview').style.display = 'none';
-                }
-                
-                // Show existing map image if available
-                if (packageData.map_image_url) {
-                    document.getElementById('mapPreviewImg').src = packageData.map_image_url;
-                    document.getElementById('mapImagePreview').style.display = 'block';
-                } else {
-                    document.getElementById('mapImagePreview').style.display = 'none';
-                }
-                
-                // Clear file input
+                // Clear file inputs
                 document.getElementById('packageImage').value = '';
                 document.getElementById('trekGallery').value = '';
                 document.getElementById('mapImage').value = '';
                 
+                // Show the modal
                 document.getElementById('packageModal').style.display = 'flex';
             }
         }
@@ -1040,6 +997,34 @@ function removePackageImage() {
     document.getElementById('packagePreviewImg').src = '';
 }
 
+// Load gallery images from URLs
+function loadGalleryImages(galleryUrlsText) {
+    const galleryImages = document.getElementById('galleryImages');
+    galleryImages.innerHTML = ''; // Clear existing images
+    
+    if (galleryUrlsText) {
+        const urls = galleryUrlsText.split(',').filter(url => url.trim());
+        if (urls.length > 0) {
+            urls.forEach((url, index) => {
+                const imgDiv = document.createElement('div');
+                imgDiv.style.position = 'relative';
+                imgDiv.innerHTML = `
+                    <img src="${url.trim()}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px;">
+                    <button onclick="removeGalleryImage(${index})" style="position: absolute; top: 5px; right: 5px; background: #e74c3c; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                galleryImages.appendChild(imgDiv);
+            });
+            document.getElementById('galleryPreview').style.display = 'block';
+            return;
+        }
+    }
+    
+    // Hide preview if no images
+    document.getElementById('galleryPreview').style.display = 'none';
+}
+
 // Preview gallery images
 function previewGalleryImages(event) {
     const files = event.target.files;
@@ -1451,7 +1436,7 @@ function populatePackageForm(packageData) {
     document.getElementById('packagePrice').value = packageData.price || '';
     document.getElementById('packageDifficulty').value = packageData.difficulty || 'Easy';
     document.getElementById('packageImageUrl').value = packageData.image_url || '';
-    document.getElementById('packageMapImageUrl').value = packageData.map_image_url || '';
+    document.getElementById('mapImageUrl').value = packageData.map_image_url || '';
     
     // Populate trek highlights
     populateHighlights(packageData.trek_highlights || '');
@@ -1489,7 +1474,7 @@ function populateHighlights(highlightsText) {
             newItem.style.marginBottom = '10px';
             
             newItem.innerHTML = `
-                <input type="text" class="form-control highlight-input" placeholder="Enter a trek highlight" value="${highlight}" style="flex: 1; margin-right: 10px;">
+                <input type="text" class="form-control highlight-input" placeholder="Enter a trek highlight" value="${escapeHtml(highlight)}" style="flex: 1; margin-right: 10px;">
                 <div><button type="button" class="btn btn-danger remove-highlight" onclick="removeHighlightItem(this)"${highlights.length > 1 ? '' : ' style="display: none;"'}>Remove</button></div>
             `;
             
@@ -1504,6 +1489,9 @@ function populateHighlights(highlightsText) {
         // Add an empty item if no data
         addHighlightItem();
     }
+    
+    // Update remove buttons visibility
+    updateRemoveButtons('highlight-item', 'remove-highlight');
 }
 
 // Populate daily itinerary from stored data
@@ -1518,38 +1506,57 @@ function populateItinerary(itineraryText) {
             // Parse format: Day X: Title | Description
             const match = dayLine.match(/Day\s+(\d+):\s*([^|]+)\|?(.*)/);
             
+            const newDay = document.createElement('div');
+            newDay.className = 'itinerary-day';
+            newDay.style.border = '1px solid #ddd';
+            newDay.style.borderRadius = '5px';
+            newDay.style.padding = '15px';
+            newDay.style.marginBottom = '15px';
+            
             if (match) {
                 const dayNum = match[1];
                 const title = match[2].trim();
                 const description = match[3] ? match[3].trim() : '';
                 
-                const newDay = document.createElement('div');
-                newDay.className = 'itinerary-day';
-                newDay.style.border = '1px solid #ddd';
-                newDay.style.borderRadius = '5px';
-                newDay.style.padding = '15px';
-                newDay.style.marginBottom = '15px';
-                
                 newDay.innerHTML = `
                     <div class="form-row">
                         <div class="form-group" style="flex: 0 0 100px; margin-right: 15px;">
                             <label>Day</label>
-                            <input type="number" class="form-control day-number" min="1" value="${dayNum}" placeholder="Day">
+                            <input type="number" class="form-control day-number" min="1" value="${escapeHtml(dayNum)}" placeholder="Day">
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label>Title</label>
-                            <input type="text" class="form-control day-title" placeholder="Day title (e.g., Arrival in Kathmandu)" value="${title}">
+                            <input type="text" class="form-control day-title" placeholder="Day title (e.g., Arrival in Kathmandu)" value="${escapeHtml(title)}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day">${description}</textarea>
+                        <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day">${escapeHtml(description)}</textarea>
                     </div>
-                    <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>Remove Day</button>
+                    <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>×</button>
                 `;
-                
-                container.appendChild(newDay);
+            } else {
+                // If format doesn't match, just display the line in the title field
+                newDay.innerHTML = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 0 0 100px; margin-right: 15px;">
+                            <label>Day</label>
+                            <input type="number" class="form-control day-number" min="1" value="${index + 1}" placeholder="Day">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Title</label>
+                            <input type="text" class="form-control day-title" placeholder="Day title (e.g., Arrival in Kathmandu)" value="${escapeHtml(dayLine)}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>×</button>
+                `;
             }
+            
+            container.appendChild(newDay);
         });
         
         // If no items were parsed, add an empty one
@@ -1560,6 +1567,9 @@ function populateItinerary(itineraryText) {
         // Add an empty item if no data
         addItineraryDay();
     }
+    
+    // Update remove buttons visibility
+    updateRemoveButtons('itinerary-day', 'remove-day');
 }
 
 // Populate what's included from stored data
@@ -1577,8 +1587,8 @@ function populateIncludedItems(includedText) {
             newItem.style.marginBottom = '10px';
             
             newItem.innerHTML = `
-                <input type="text" class="form-control included-input" placeholder="Enter an included item" value="${item}" style="flex: 1; margin-right: 10px;">
-                <div><button type="button" class="btn btn-danger remove-included" onclick="removeIncludedItem(this)"${includedItems.length > 1 ? '' : ' style="display: none;"'}>Remove</button></div>
+                <input type="text" class="form-control included-input" placeholder="Enter an included item" value="${escapeHtml(item)}" style="flex: 1; margin-right: 10px;">
+                <button type="button" class="btn btn-danger remove-included" onclick="removeIncludedItem(this)"${includedItems.length > 1 ? '' : ' style="display: none;"'}>×</button>
             `;
             
             container.appendChild(newItem);
@@ -1592,6 +1602,22 @@ function populateIncludedItems(includedText) {
         // Add an empty item if no data
         addIncludedItem();
     }
+    
+    // Update remove buttons visibility
+    updateRemoveButtons('included-item', 'remove-included');
+}
+
+// Helper function to escape HTML entities
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
 // Reset package form

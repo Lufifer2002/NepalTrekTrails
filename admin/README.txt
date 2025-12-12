@@ -8,7 +8,7 @@ This admin panel allows you to manage:
 
 Login Credentials:
 Username: admin@nepaltrektrails.com
-Password: SecurePass!2025
+Password: admin123
 
 Features:
 - Add, edit, and delete trekking packages
