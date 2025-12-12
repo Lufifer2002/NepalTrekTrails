@@ -252,37 +252,68 @@
                     <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
                         <i class="fas fa-star"></i> Trek Highlights
                     </h4>
-                    
+
                     <div class="form-group">
-                        <label for="trekHighlights">Trek Highlights (one per line)</label>
-                        <textarea id="trekHighlights" class="form-control" rows="5" placeholder="Enter each highlight on a new line&#10;Example:&#10;Panoramic mountain views&#10;Experienced local guides&#10;Cultural experiences"></textarea>
-                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Enter each highlight on a new line
-                        </small>
+                        <label>Trek Highlights</label>
+                        <div id="trekHighlightsContainer">
+                            <div class="highlight-item" style="display: flex; margin-bottom: 10px;">
+                                <input type="text" class="form-control highlight-input" placeholder="Enter a trek highlight" style="flex: 1; margin-right: 10px;">
+                               <div> <button type="button" class="btn btn-danger remove-highlight" onclick="removeHighlightItem(this)" style="display: none;">Remove</button></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addHighlightItem()">
+                            <i class="fas fa-plus"></i> Add Another Highlight
+                        </button>
+                        <input type="hidden" id="trekHighlights">
                     </div>
-                    
+
                     <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
                         <i class="fas fa-route"></i> Daily Itinerary
                     </h4>
-                    
+
                     <div class="form-group">
-                        <label for="dailyItinerary">Daily Itinerary (JSON format or structured text)</label>
-                        <textarea id="dailyItinerary" class="form-control" rows="6" placeholder='Enter itinerary in format:&#10;Day 1: Title | Description&#10;Day 2: Title | Description&#10;&#10;Example:&#10;Day 1: Arrival in Kathmandu | Arrive at airport and transfer to hotel&#10;Day 2: Trek to Namche | Ascend to Namche Bazaar'></textarea>
-                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Format: Day X: Title | Description (one per line)
-                        </small>
+                        <label>Daily Itinerary</label>
+                        <div id="dailyItineraryContainer">
+                            <div class="itinerary-day" style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px;">
+                                <div class="form-row">
+                                    <div class="form-group" style="flex: 0 0 100px; margin-right: 15px;">
+                                        <label>Day</label>
+                                        <input type="number" class="form-control day-number" min="1" value="1" placeholder="Day">
+                                    </div>
+                                    <div class="form-group" style="flex: 1;">
+                                        <label>Title</label>
+                                        <input type="text" class="form-control day-title" placeholder="Day title (e.g., Arrival in Kathmandu)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day"></textarea>
+                                </div>
+                                <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)" style="display: none;">Remove Day</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addItineraryDay()">
+                            <i class="fas fa-plus"></i> Add Another Day
+                        </button>
+                        <input type="hidden" id="dailyItinerary">
                     </div>
-                    
+
                     <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
                         <i class="fas fa-check-circle"></i> What's Included
                     </h4>
-                    
+
                     <div class="form-group">
-                        <label for="whatsIncluded">What's Included (one per line)</label>
-                        <textarea id="whatsIncluded" class="form-control" rows="6" placeholder="Enter each included item on a new line&#10;Example:&#10;Airport pick-up and drop-off&#10;Accommodation in Kathmandu&#10;All meals during trek"></textarea>
-                        <small style="color: #7f8c8d; display: block; margin-top: 5px;">
-                            <i class="fas fa-info-circle"></i> Enter each included item on a new line
-                        </small>
+                        <label>What's Included</label>
+                        <div id="whatsIncludedContainer">
+                            <div class="included-item" style="display: flex; margin-bottom: 10px;">
+                                <input type="text" class="form-control included-input" placeholder="Enter an included item" style="flex: 1; margin-right: 10px;">
+                                <div><button type="button" class="btn btn-danger remove-included" onclick="removeIncludedItem(this)" style="display: none;">Remove</button></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addIncludedItem()">
+                            <i class="fas fa-plus"></i> Add Another Item
+                        </button>
+                        <input type="hidden" id="whatsIncluded">
                     </div>
                     
                     <h4 style="margin: 25px 0 15px; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">

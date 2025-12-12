@@ -13,7 +13,11 @@ function getJsonBody() {
 }
 
 function sanitize($str) {
-  return trim(filter_var($str, FILTER_SANITIZE_SPECIAL_CHARS));
+  // Sanitize but preserve newlines
+  $sanitized = trim(filter_var($str, FILTER_SANITIZE_SPECIAL_CHARS));
+  // Convert HTML entity newlines back to actual newlines
+  $sanitized = str_replace(['&#10;', '&#13;'], ["\n", "\r"], $sanitized);
+  return $sanitized;
 }
 
 function validateEmail($email) {

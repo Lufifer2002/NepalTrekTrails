@@ -338,13 +338,15 @@ async function savePackage() {
     const difficulty = document.getElementById('packageDifficulty').value;
     const imageFile = document.getElementById('packageImage').files[0];
     let imageUrl = document.getElementById('packageImageUrl').value;
-    const trekHighlights = document.getElementById('trekHighlights').value;
-    const dailyItinerary = document.getElementById('dailyItinerary').value;
-    const whatsIncluded = document.getElementById('whatsIncluded').value;
     const galleryFiles = document.getElementById('trekGallery').files;
     let galleryUrls = document.getElementById('galleryUrls').value;
     const mapImageFile = document.getElementById('mapImage').files[0];
     let mapImageUrl = document.getElementById('mapImageUrl').value;
+    
+    // Collect formatted data from dynamic inputs
+    const trekHighlights = collectTrekHighlights();
+    const dailyItinerary = collectDailyItinerary();
+    const whatsIncluded = collectWhatsIncluded();
     
     // Validation
     if (!name || !description || !duration || !price || !difficulty) {
@@ -1107,3 +1109,514 @@ function removeMapImage() {
     document.getElementById('mapPreviewImg').src = '';
     document.getElementById('mapImageUrl').value = '';
 }
+
+// Format trek highlights for storage
+function formatTrekHighlights(highlightsText) {
+    if (!highlightsText || !highlightsText.trim()) {
+        return '';
+    }
+    
+    // Split by newlines, trim each line, and filter out empty lines
+    return highlightsText.split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join('\n');
+}
+
+// Format daily itinerary for storage
+function formatDailyItinerary(itineraryText) {
+    if (!itineraryText || !itineraryText.trim()) {
+        return '';
+    }
+    
+    // Split by newlines, trim each line, and filter out empty lines
+    return itineraryText.split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join('\n');
+}
+
+// Format what's included for storage
+function formatWhatsIncluded(includedText) {
+    if (!includedText || !includedText.trim()) {
+        return '';
+    }
+    
+    // Split by newlines, trim each line, and filter out empty lines
+    return includedText.split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join('\n');
+}
+
+// Functions for trek highlights
+function addHighlightItem() {
+    const container = document.getElementById('trekHighlightsContainer');
+    const newItem = document.createElement('div');
+    newItem.className = 'highlight-item';
+    newItem.style.display = 'flex';
+    newItem.style.marginBottom = '10px';
+    
+    newItem.innerHTML = `
+        <input type="text" class="form-control highlight-input" placeholder="Enter a trek highlight" style="flex: 1; margin-right: 10px;">
+       <div><button type="button" class="btn btn-danger remove-highlight" onclick="removeHighlightItem(this)">Remove</button></div>
+    `;
+    
+    container.appendChild(newItem);
+    
+    // Show remove buttons when there's more than one item
+    updateRemoveButtons('highlight-item', 'remove-highlight');
+    
+    // Update hidden field
+    updateHiddenFields();
+}
+
+function removeHighlightItem(button) {
+    button.closest('.highlight-item').remove();
+    updateRemoveButtons('highlight-item', 'remove-highlight');
+    
+    // Update hidden field
+    updateHiddenFields();
+}
+
+// Functions for daily itinerary
+function addItineraryDay() {
+    const container = document.getElementById('dailyItineraryContainer');
+    const dayNumber = container.children.length + 1;
+    
+    const newDay = document.createElement('div');
+    newDay.className = 'itinerary-day';
+    newDay.style.border = '1px solid #ddd';
+    newDay.style.borderRadius = '5px';
+    newDay.style.padding = '15px';
+    newDay.style.marginBottom = '15px';
+    
+    newDay.innerHTML = `
+        <div class="form-row">
+            <div class="form-group" style="flex: 0 0 100px; margin-right: 15px;">
+                <label>Day</label>
+                <input type="number" class="form-control day-number" min="1" value="${dayNumber}" placeholder="Day">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>Title</label>
+                <input type="text" class="form-control day-title" placeholder="Day title (e.g., Arrival in Kathmandu)">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day"></textarea>
+        </div>
+        <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)">Remove Day</button>
+    `;
+    
+    container.appendChild(newDay);
+    
+    // Show remove buttons when there's more than one item
+    updateRemoveButtons('itinerary-day', 'remove-day');
+    
+    // Update hidden field
+    updateHiddenFields();
+}
+
+function removeItineraryDay(button) {
+    button.closest('.itinerary-day').remove();
+    updateRemoveButtons('itinerary-day', 'remove-day');
+    
+    // Reorder day numbers
+    const dayNumbers = document.querySelectorAll('.day-number');
+    dayNumbers.forEach((input, index) => {
+        input.value = index + 1;
+    });
+    
+    // Update hidden field
+    updateHiddenFields();
+}
+
+// Functions for what's included
+function addIncludedItem() {
+    const container = document.getElementById('whatsIncludedContainer');
+    const newItem = document.createElement('div');
+    newItem.className = 'included-item';
+    newItem.style.display = 'flex';
+    newItem.style.marginBottom = '10px';
+    
+    newItem.innerHTML = `
+        <input type="text" class="form-control included-input" placeholder="Enter an included item" style="flex: 1; margin-right: 10px;">
+        <div><button type="button" class="btn btn-danger remove-included" onclick="removeIncludedItem(this)">Remove</button><div>
+    `;
+    
+    container.appendChild(newItem);
+    
+    // Show remove buttons when there's more than one item
+    updateRemoveButtons('included-item', 'remove-included');
+    
+    // Update hidden field
+    updateHiddenFields();
+}
+
+function removeIncludedItem(button) {
+    button.closest('.included-item').remove();
+    updateRemoveButtons('included-item', 'remove-included');
+    
+    // Update hidden field
+    updateHiddenFields();
+}
+
+// Update remove buttons visibility
+function updateRemoveButtons(itemClass, buttonClass) {
+    const items = document.querySelectorAll('.' + itemClass);
+    const buttons = document.querySelectorAll('.' + buttonClass);
+    
+    if (items.length > 1) {
+        buttons.forEach(button => {
+            button.style.display = 'inline-block';
+        });
+    } else {
+        buttons.forEach(button => {
+            button.style.display = 'none';
+        });
+    }
+}
+
+// Collect trek highlights data
+function collectTrekHighlights() {
+    const highlightInputs = document.querySelectorAll('.highlight-input');
+    const highlights = [];
+    
+    highlightInputs.forEach(input => {
+        if (input.value.trim()) {
+            highlights.push(input.value.trim());
+        }
+    });
+    
+    return highlights.join('\n');
+}
+
+// Collect daily itinerary data
+function collectDailyItinerary() {
+    const dayElements = document.querySelectorAll('.itinerary-day');
+    const itinerary = [];
+    
+    dayElements.forEach(dayElement => {
+        const dayNumber = dayElement.querySelector('.day-number').value;
+        const title = dayElement.querySelector('.day-title').value.trim();
+        const description = dayElement.querySelector('.day-description').value.trim();
+        
+        if (title) {
+            const line = description ? 
+                `Day ${dayNumber}: ${title} | ${description}` : 
+                `Day ${dayNumber}: ${title}`;
+            itinerary.push(line);
+        }
+    });
+    
+    return itinerary.join('\n');
+}
+
+// Collect what's included data
+function collectWhatsIncluded() {
+    const includedInputs = document.querySelectorAll('.included-input');
+    const includedItems = [];
+    
+    includedInputs.forEach(input => {
+        if (input.value.trim()) {
+            includedItems.push(input.value.trim());
+        }
+    });
+    
+    return includedItems.join('\n');
+}
+
+// Update hidden fields with collected data
+function updateHiddenFields() {
+    document.getElementById('trekHighlights').value = collectTrekHighlights();
+    document.getElementById('dailyItinerary').value = collectDailyItinerary();
+    document.getElementById('whatsIncluded').value = collectWhatsIncluded();
+}
+
+// Add event listeners to update hidden fields when inputs change
+document.addEventListener('DOMContentLoaded', function() {
+    // Add input event listeners to all dynamic inputs
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('highlight-input') || 
+            e.target.classList.contains('day-number') || 
+            e.target.classList.contains('day-title') || 
+            e.target.classList.contains('day-description') || 
+            e.target.classList.contains('included-input')) {
+            updateHiddenFields();
+        }
+    });
+    
+    // Also update when items are added/removed
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-highlight') || 
+            e.target.classList.contains('remove-day') || 
+            e.target.classList.contains('remove-included') ||
+            e.target.textContent.includes('Add Another')) {
+            // Small delay to ensure DOM is updated
+            setTimeout(updateHiddenFields, 100);
+        }
+    });
+});
+
+// Package form submission
+async function submitPackageForm(action, id = null) {
+    try {
+        showLoadingSpinner();
+        
+        // Get form values
+        const name = document.getElementById('packageName').value;
+        const description = document.getElementById('packageDescription').value;
+        const duration = document.getElementById('packageDuration').value;
+        const price = document.getElementById('packagePrice').value;
+        const difficulty = document.getElementById('packageDifficulty').value;
+        const imageUrl = document.getElementById('packageImageUrl').value;
+        const mapImageUrl = document.getElementById('packageMapImageUrl').value;
+        
+        // Collect formatted data from dynamic inputs
+        const trekHighlights = collectTrekHighlights();
+        const dailyItinerary = collectDailyItinerary();
+        const whatsIncluded = collectWhatsIncluded();
+        
+        // Get gallery URLs
+        const galleryUrls = getGalleryUrls();
+        
+        // Validate required fields
+        if (!name || !duration || !price) {
+            hideLoadingSpinner();
+            alert('Please fill in all required fields (Name, Duration, Price)');
+            return;
+        }
+        
+        // Prepare request data
+        const requestData = {
+            action: action,
+            admin_key: 'admin_secret_key_123',
+            name: name,
+            description: description,
+            duration: parseInt(duration),
+            price: parseFloat(price),
+            difficulty: difficulty,
+            image_url: imageUrl,
+            trek_highlights: trekHighlights,
+            daily_itinerary: dailyItinerary,
+            whats_included: whatsIncluded,
+            gallery_urls: galleryUrls,
+            map_image_url: mapImageUrl
+        };
+        
+        // Add ID for update action
+        if (id) {
+            requestData.id = parseInt(id);
+        }
+        
+        // Send request to backend
+        const response = await fetch('../Backend/admin_package.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        });
+        
+        const data = await response.json();
+        
+        hideLoadingSpinner();
+        
+        if (data.status === 'success') {
+            alert(`Package ${action === 'create' ? 'created' : 'updated'} successfully!`);
+            
+            // Reset form if creating new package
+            if (action === 'create') {
+                resetPackageForm();
+            }
+            
+            // Refresh packages list
+            loadPackages();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    } catch (error) {
+        hideLoadingSpinner();
+        console.error('Error submitting package:', error);
+        alert('Error submitting package. Please try again.');
+    }
+}
+
+// Populate package form for editing
+function populatePackageForm(packageData) {
+    document.getElementById('packageName').value = packageData.name || '';
+    document.getElementById('packageDescription').value = packageData.description || '';
+    document.getElementById('packageDuration').value = packageData.duration || '';
+    document.getElementById('packagePrice').value = packageData.price || '';
+    document.getElementById('packageDifficulty').value = packageData.difficulty || 'Easy';
+    document.getElementById('packageImageUrl').value = packageData.image_url || '';
+    document.getElementById('packageMapImageUrl').value = packageData.map_image_url || '';
+    
+    // Populate trek highlights
+    populateHighlights(packageData.trek_highlights || '');
+    
+    // Populate daily itinerary
+    populateItinerary(packageData.daily_itinerary || '');
+    
+    // Populate what's included
+    populateIncludedItems(packageData.whats_included || '');
+    
+    // Load gallery images
+    loadGalleryImages(packageData.gallery_urls || '');
+    
+    // Show preview if image URL exists
+    if (packageData.image_url) {
+        document.getElementById('packageImagePreview').style.display = 'block';
+        document.getElementById('packagePreviewImg').src = packageData.image_url;
+    } else {
+        document.getElementById('packageImagePreview').style.display = 'none';
+    }
+}
+
+// Populate trek highlights from stored data
+function populateHighlights(highlightsText) {
+    const container = document.getElementById('trekHighlightsContainer');
+    container.innerHTML = ''; // Clear existing items
+    
+    if (highlightsText) {
+        const highlights = highlightsText.split('\n').filter(h => h.trim());
+        
+        highlights.forEach((highlight, index) => {
+            const newItem = document.createElement('div');
+            newItem.className = 'highlight-item';
+            newItem.style.display = 'flex';
+            newItem.style.marginBottom = '10px';
+            
+            newItem.innerHTML = `
+                <input type="text" class="form-control highlight-input" placeholder="Enter a trek highlight" value="${highlight}" style="flex: 1; margin-right: 10px;">
+                <div><button type="button" class="btn btn-danger remove-highlight" onclick="removeHighlightItem(this)"${highlights.length > 1 ? '' : ' style="display: none;"'}>Remove</button></div>
+            `;
+            
+            container.appendChild(newItem);
+        });
+        
+        // If no items were added, add an empty one
+        if (highlights.length === 0) {
+            addHighlightItem();
+        }
+    } else {
+        // Add an empty item if no data
+        addHighlightItem();
+    }
+}
+
+// Populate daily itinerary from stored data
+function populateItinerary(itineraryText) {
+    const container = document.getElementById('dailyItineraryContainer');
+    container.innerHTML = ''; // Clear existing items
+    
+    if (itineraryText) {
+        const days = itineraryText.split('\n').filter(d => d.trim());
+        
+        days.forEach((dayLine, index) => {
+            // Parse format: Day X: Title | Description
+            const match = dayLine.match(/Day\s+(\d+):\s*([^|]+)\|?(.*)/);
+            
+            if (match) {
+                const dayNum = match[1];
+                const title = match[2].trim();
+                const description = match[3] ? match[3].trim() : '';
+                
+                const newDay = document.createElement('div');
+                newDay.className = 'itinerary-day';
+                newDay.style.border = '1px solid #ddd';
+                newDay.style.borderRadius = '5px';
+                newDay.style.padding = '15px';
+                newDay.style.marginBottom = '15px';
+                
+                newDay.innerHTML = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 0 0 100px; margin-right: 15px;">
+                            <label>Day</label>
+                            <input type="number" class="form-control day-number" min="1" value="${dayNum}" placeholder="Day">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Title</label>
+                            <input type="text" class="form-control day-title" placeholder="Day title (e.g., Arrival in Kathmandu)" value="${title}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control day-description" rows="2" placeholder="Describe activities for this day">${description}</textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger remove-day" onclick="removeItineraryDay(this)"${days.length > 1 ? '' : ' style="display: none;"'}>Remove Day</button>
+                `;
+                
+                container.appendChild(newDay);
+            }
+        });
+        
+        // If no items were parsed, add an empty one
+        if (days.length === 0) {
+            addItineraryDay();
+        }
+    } else {
+        // Add an empty item if no data
+        addItineraryDay();
+    }
+}
+
+// Populate what's included from stored data
+function populateIncludedItems(includedText) {
+    const container = document.getElementById('whatsIncludedContainer');
+    container.innerHTML = ''; // Clear existing items
+    
+    if (includedText) {
+        const includedItems = includedText.split('\n').filter(i => i.trim());
+        
+        includedItems.forEach((item, index) => {
+            const newItem = document.createElement('div');
+            newItem.className = 'included-item';
+            newItem.style.display = 'flex';
+            newItem.style.marginBottom = '10px';
+            
+            newItem.innerHTML = `
+                <input type="text" class="form-control included-input" placeholder="Enter an included item" value="${item}" style="flex: 1; margin-right: 10px;">
+                <div><button type="button" class="btn btn-danger remove-included" onclick="removeIncludedItem(this)"${includedItems.length > 1 ? '' : ' style="display: none;"'}>Remove</button></div>
+            `;
+            
+            container.appendChild(newItem);
+        });
+        
+        // If no items were added, add an empty one
+        if (includedItems.length === 0) {
+            addIncludedItem();
+        }
+    } else {
+        // Add an empty item if no data
+        addIncludedItem();
+    }
+}
+
+// Reset package form
+function resetPackageForm() {
+    document.getElementById('packageForm').reset();
+    document.getElementById('packageImagePreview').style.display = 'none';
+    document.getElementById('packagePreviewImg').src = '';
+    document.getElementById('packageImageUrl').value = '';
+    document.getElementById('mapImagePreview').style.display = 'none';
+    document.getElementById('mapPreviewImg').src = '';
+    document.getElementById('mapImageUrl').value = '';
+    document.getElementById('galleryPreview').style.display = 'none';
+    document.getElementById('galleryImages').innerHTML = '';
+    document.getElementById('galleryUrls').value = '';
+    
+    // Reset dynamic fields to default state
+    populateHighlights('');
+    populateItinerary('');
+    populateIncludedItems('');
+}
+
+// Initialize the form when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize with one empty item for each section
+    updateRemoveButtons('highlight-item', 'remove-highlight');
+    updateRemoveButtons('itinerary-day', 'remove-day');
+    updateRemoveButtons('included-item', 'remove-included');
+});
