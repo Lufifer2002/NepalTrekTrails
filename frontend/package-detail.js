@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-
 });
 
 // Load package details
@@ -199,7 +198,11 @@ function changeMainImage(imageUrl) {
         thumb.classList.remove('active');
     });
     
-    event.currentTarget.classList.add('active');
+    // Find the clicked thumbnail and make it active
+    const clickedThumb = event.currentTarget;
+    if (clickedThumb) {
+        clickedThumb.classList.add('active');
+    }
 }
 
 // Load additional package information
@@ -501,61 +504,10 @@ function loadTrekMap(pkg) {
     }
 }
 
-// Load reviews
+// Load reviews - but this element doesn't exist in the HTML, so we'll load recommendations instead
 function loadReviews(pkg) {
-    const reviewsContainer = document.getElementById('packageReviews');
-    
-    // Sample reviews - in a real app, this would come from the database
-    const sampleReviews = {
-        1: [ // Everest Base Camp Trek
-            { author: "John Smith", rating: 5, text: "Absolutely incredible experience! The views from Kala Patthar were breathtaking. Our guide was knowledgeable and helpful throughout the journey." },
-            { author: "Sarah Johnson", rating: 4, text: "Challenging but rewarding trek. Well organized trip with great accommodations. Would recommend to anyone with moderate fitness level." },
-            { author: "Michael Brown", rating: 5, text: "Life-changing adventure! The team at Nepal Trek Trails made everything seamless. The local culture experience was amazing." }
-        ],
-        2: [ // Annapurna Circuit Trek
-            { author: "Emma Wilson", rating: 5, text: "Fantastic trek with diverse landscapes. Crossing Thorung La Pass was challenging but worth every step. Great support from guides." },
-            { author: "David Lee", rating: 4, text: "Well-planned itinerary with good balance of challenge and comfort. The Mustang region was particularly stunning." },
-            { author: "Lisa Chen", rating: 5, text: "Amazing cultural immersion. The teahouses were cozy and the food was surprisingly good. Highly recommend this trek!" }
-        ],
-        3: [ // Langtang Valley Trek
-            { author: "Robert Garcia", rating: 4, text: "Beautiful valley trek with less crowds than Everest or Annapurna regions. Perfect for those wanting a shorter but fulfilling trek." },
-            { author: "Jennifer Martinez", rating: 5, text: "Great introduction to trekking in Nepal. The Langtang village and Kyanjin Gompa were highlights. Excellent guide and porter service." },
-            { author: "Thomas Anderson", rating: 4, text: "Scenic trek with varied terrain. The views of Langtang Lirung were spectacular. Good option for intermediate trekkers." }
-        ]
-    };
-    
-    // Use pkg.id instead of just id
-    const reviews = sampleReviews[pkg.id] || [];
-    let reviewsHTML = '';
-    
-    reviews.forEach(review => {
-        let stars = '';
-        for (let i = 0; i < 5; i++) {
-            if (i < review.rating) {
-                stars += '<i class="fas fa-star"></i>';
-            } else {
-                stars += '<i class="far fa-star"></i>';
-            }
-        }
-        
-        // Get initials for avatar
-        const initials = review.author.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-        
-        reviewsHTML += `
-            <div class="review-card">
-                <div class="review-header">
-                    <div class="review-author">
-                        <div class="author-avatar">${initials}</div>
-                        ${review.author}
-                    </div>
-                    <div class="review-rating">${stars}</div>
-                </div>
-                <div class="review-text">${review.text}</div>
-            </div>
-        `;
-    });
-    
-    reviewsContainer.innerHTML = reviewsHTML;
+    // Since the reviews section was replaced with recommendations, we'll load recommendations here
+    loadRecommendations(pkg);
 }
 
 // Submit booking
@@ -743,4 +695,98 @@ function closeMapModal() {
         mapModal.style.display = 'none';
         document.body.style.overflow = '';
     }
+}
+
+// Load recommendations based on CONTENT BASED ALGORITHM
+async function loadRecommendations(currentPkg) {
+    try {
+        // Fetch all packages for comparison
+        const response = await fetch('../Backend/package.php'); // Assuming this returns all packages if no ID is provided
+        const data = await response.json();
+        
+        if (data.status === 'success' && data.packages) {
+            const allPackages = data.packages;
+            const recommendations = filterRecommendations(currentPkg, allPackages);
+            
+            renderRecommendations(recommendations);
+        } else {
+            document.getElementById('packageRecommendations').innerHTML = '<p style="text-align: center; color: #95a5a6;">Unable to load recommendations at this time.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading recommendations:', error);
+        document.getElementById('packageRecommendations').innerHTML = '<p style="text-align: center; color: #95a5a6;">Error loading recommendations. Please try again.</p>';
+    }
+}
+
+// Content-based filtering algorithm with weighted scoring
+function filterRecommendations(currentPkg, allPackages) {
+    const currentDifficulty = currentPkg.difficulty || 'Moderate';
+    const currentPrice = parseFloat(currentPkg.price) || 0;
+    const currentDuration = parseInt(currentPkg.duration) || 0;
+    
+    // Define ranges
+    const priceRange = 0.25; // ±25%
+    const durationRange = 3; // ±3 days
+    
+    // Filter and score packages
+    const scoredPackages = allPackages
+        .filter(pkg => pkg.id !== currentPkg.id) // Exclude current package
+        .map(pkg => {
+            const pkgPrice = parseFloat(pkg.price) || 0;
+            const pkgDuration = parseInt(pkg.duration) || 0;
+            const pkgDifficulty = pkg.difficulty || 'Moderate';
+            
+            // Calculate similarity scores (0-1 scale)
+            const difficultyScore = pkgDifficulty === currentDifficulty ? 1 : 0; // Exact match only
+            const priceScore = Math.max(0, 1 - Math.abs(pkgPrice - currentPrice) / (currentPrice * priceRange));
+            const durationScore = Math.max(0, 1 - Math.abs(pkgDuration - currentDuration) / durationRange);
+            
+            // Weighted total score (difficulty: 50%, price: 30%, duration: 20%)
+            const totalScore = (difficultyScore * 0.5) + (priceScore * 0.3) + (durationScore * 0.2);
+            
+            return { ...pkg, score: totalScore };
+        })
+        .filter(pkg => pkg.score > 0.3) // Minimum threshold for relevance
+        .sort((a, b) => b.score - a.score) // Sort by score descending
+        .slice(0, 3); // Top 3 recommendations
+    
+    return scoredPackages;
+}
+
+// Render recommendations
+function renderRecommendations(recommendations) {
+    const container = document.getElementById('packageRecommendations');
+    
+    if (recommendations.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #95a5a6;">No similar treks found. Try exploring other packages!</p>';
+        return;
+    }
+    
+    let html = '<div class="recommendations-grid">';
+    recommendations.forEach(pkg => {
+        const image = pkg.image_url || 'https://via.placeholder.com/300x200?text=Trek+Image';
+        const difficulty = pkg.difficulty || 'Moderate';
+        const price = parseFloat(pkg.price).toFixed(2);
+        const duration = `${pkg.duration} days`;
+        
+        html += `
+            <div class="recommendation-card">
+                <img src="${image}" alt="${pkg.name}" onerror="this.src='https://via.placeholder.com/300x200?text=Trek+Image'">
+                <div class="card-content">
+                    <h4>${pkg.name}</h4>
+                    <p><i class="fas fa-mountain"></i> ${difficulty} | <i class="fas fa-clock"></i> ${duration}</p>
+                    <p class="price">Rs. ${price}</p>
+                    <a href="package-detail.html?id=${pkg.id}" class="btn btn-outline">View Details</a>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    // Add "View All" if there are more potential matches (optional)
+    if (recommendations.length >= 3) {
+        html += '<div style="text-align: center; margin-top: 20px;"><a href="packages.html" class="btn btn-secondary">View All Packages</a></div>';
+    }
+    
+    container.innerHTML = html;
 }
