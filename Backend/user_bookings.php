@@ -27,7 +27,7 @@ if (!$email) {
 }
 
 try {
-    // Fetch bookings for the user
+    // Fetch bookings for the user, excluding cancelled bookings
     $stmt = $pdo->prepare("
         SELECT 
             b.id,
@@ -45,7 +45,7 @@ try {
             p.price as package_price
         FROM bookings b
         LEFT JOIN packages p ON b.package_id = p.id
-        WHERE b.email = ? 
+        WHERE b.email = ? AND b.status != 'cancelled'
         ORDER BY b.created_at DESC
     ");
     $stmt->execute([$email]);

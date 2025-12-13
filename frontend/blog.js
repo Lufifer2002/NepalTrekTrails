@@ -55,7 +55,7 @@ function displayBlogs(blogs) {
                 </div>
                 <h3 class="blog-title">${blog.title}</h3>
                 <p class="blog-excerpt">${truncateText(blog.content, 120)}</p>
-                <a href="#" class="blog-read-more" onclick="viewBlog(${blog.id})">Read More <i class="fas fa-arrow-right"></i></a>
+                <a href="blog-detail.html?id=${blog.id}" class="blog-read-more">Read More <i class="fas fa-arrow-right"></i></a>
             </div>
         </article>
     `).join('');
@@ -75,7 +75,7 @@ function truncateText(text, maxLength) {
     return text.substring(0, maxLength) + '...';
 }
 
-// View blog (placeholder function)
+// View blog - now redirects to blog detail page
 function viewBlog(blogId) {
-    alert(`Viewing blog #${blogId}\n(This would open the full blog post in a real implementation)`);
+    window.location.href = `blog-detail.html?id=${blogId}`;
 }

@@ -119,9 +119,10 @@ function displayBookings(bookings) {
                 `<button class="btn btn-primary" onclick="retryPayment(${booking.id}, ${booking.package_price || 0})">
                     <i class="fas fa-credit-card"></i> Pay Now
                 </button>` : ''}
-                <button class="btn btn-secondary" onclick="cancelBooking(${booking.id})">
+                ${(booking.status.toLowerCase() === 'pending' || booking.status.toLowerCase() === 'confirmed') ? 
+                `<button class="btn btn-secondary" onclick="cancelBooking(${booking.id})">
                     <i class="fas fa-times"></i> Cancel Booking
-                </button>
+                </button>` : ''}
             </div>
         </div>
     `).join('');
@@ -170,13 +171,52 @@ function formatPaymentMethod(method) {
 
 // View booking details
 function viewBookingDetails(bookingId) {
-    alert(`Viewing details for booking #${bookingId}\n(This would open a detailed view in a real implementation)`);
+    // In a real implementation, this would show detailed information about the booking
+    // For now, we'll show an alert with the booking ID
+    alert(`Booking Details for #${bookingId}\n\nThis would show detailed booking information in a real implementation.`);
 }
 
 // Cancel booking
-function cancelBooking(bookingId) {
-    if (confirm('Are you sure you want to cancel this booking?')) {
-        alert(`Canceling booking #${bookingId}\n(This would process the cancellation in a real implementation)`);
+async function cancelBooking(bookingId) {
+    if (!confirm('Are you sure you want to cancel this booking? The booking will be marked as cancelled and removed from your list, but will still be visible to administrators.')) {
+        return;
+    }
+    
+    try {
+        // Get logged in user data
+        const loggedUserRaw = localStorage.getItem("loggedUser");
+        if (!loggedUserRaw) {
+            alert('You must be logged in to cancel a booking.');
+            return;
+        }
+        
+        const userData = JSON.parse(loggedUserRaw);
+        const userEmail = userData.email;
+        
+        // Send request to cancel booking
+        const response = await fetch('../Backend/cancel_booking.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                booking_id: bookingId,
+                email: userEmail
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            alert('Booking cancelled successfully!');
+            // Reload the bookings list
+            loadUserBookings();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error cancelling booking:', error);
+        alert('Error cancelling booking. Please try again.');
     }
 }
 

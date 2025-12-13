@@ -14,6 +14,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Get a specific blog by ID
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $id = (int)$_GET['id'];
+    
+    try {
+        $stmt = $pdo->prepare("
+            SELECT * FROM blogs 
+            WHERE id = ? AND status = 'approved'
+        ");
+        $stmt->execute([$id]);
+        $blog = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($blog) {
+            jsonResponse(["status" => "success", "blog" => $blog]);
+        } else {
+            jsonResponse(["status" => "error", "message" => "Blog not found or not approved"], 404);
+        }
+    } catch (PDOException $e) {
+        jsonResponse(["status" => "error", "message" => "Failed to fetch blog"], 500);
+    }
+}
+
 // Get user's blogs by email
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['email'])) {
     $email = sanitize($_GET['email']);
@@ -34,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['email'])) {
 }
 
 // Get all approved blogs (for public blog page)
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_GET['email'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_GET['email']) && !isset($_GET['id'])) {
     try {
         $stmt = $pdo->prepare("
             SELECT * FROM blogs 

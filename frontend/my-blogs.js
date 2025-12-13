@@ -89,14 +89,9 @@ function displayBlogs(blogs) {
             </div>
             
             <div class="booking-actions">
-                <button class="btn btn-outline" onclick="viewBlog(${blog.id})">
-                    <i class="fas fa-eye"></i> View Full Post
+                <button class="btn btn-secondary" onclick="deleteBlog(${blog.id})">
+                    <i class="fas fa-trash"></i> Delete Blog
                 </button>
-                ${blog.status === 'pending' ? `
-                    <button class="btn btn-secondary" onclick="deleteBlog(${blog.id})">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                ` : ''}
             </div>
         </div>
     `).join('');
@@ -119,11 +114,12 @@ function formatDateTime(dateTimeString) {
 }
 
 function viewBlog(blogId) {
-    alert(`Viewing blog #${blogId}\n(This would open the full blog post)`);
+    // Redirect to blog detail page
+    window.location.href = `blog-detail.html?id=${blogId}`;
 }
 
 async function deleteBlog(blogId) {
-    if (!confirm('Are you sure you want to delete this blog post?')) {
+    if (!confirm('Are you sure you want to delete this blog post? This action cannot be undone.')) {
         return;
     }
     
@@ -140,7 +136,7 @@ async function deleteBlog(blogId) {
         
         if (data.status === 'success') {
             alert('Blog deleted successfully!');
-            loadMyBlogs();
+            loadMyBlogs(); // Reload the blog list
         } else {
             alert('Error: ' + data.message);
         }
