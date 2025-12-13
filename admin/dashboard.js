@@ -105,17 +105,52 @@ async function loadDashboardStats() {
         const packagesData = await packagesResponse.json();
         document.getElementById('total-packages').textContent = packagesData.data ? packagesData.data.length : 0;
         
-        // For other stats, we would need dedicated endpoints
-        // For now, we'll use dummy data
-        document.getElementById('total-bookings').textContent = '24';
+        // Fetch bookings count
+        const bookingsResponse = await fetch('../Backend/admin_booking.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'list',
+                admin_key: 'admin_secret_key_123'
+            })
+        });
+        const bookingsData = await bookingsResponse.json();
+        document.getElementById('total-bookings').textContent = bookingsData.data ? bookingsData.data.length : 0;
         
         // Fetch blogs count
         const blogsResponse = await fetch('../Backend/admin_blog.php');
         const blogsData = await blogsResponse.json();
         document.getElementById('total-blogs').textContent = blogsData.blogs ? blogsData.blogs.length : 0;
         
-        document.getElementById('total-contacts').textContent = '8';
-        document.getElementById('total-subscribers').textContent = '156';
+        // Fetch contacts count
+        const contactsResponse = await fetch('../Backend/admin_contact.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'list',
+                admin_key: 'admin_secret_key_123'
+            })
+        });
+        const contactsData = await contactsResponse.json();
+        document.getElementById('total-contacts').textContent = contactsData.data ? contactsData.data.length : 0;
+        
+        // Fetch subscribers count
+        const subscribersResponse = await fetch('../Backend/admin_subscriber.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'list',
+                admin_key: 'admin_secret_key_123'
+            })
+        });
+        const subscribersData = await subscribersResponse.json();
+        document.getElementById('total-subscribers').textContent = subscribersData.data ? subscribersData.data.length : 0;
     } catch (error) {
         console.error('Error loading dashboard stats:', error);
     }
