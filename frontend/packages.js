@@ -80,3 +80,18 @@ function displayPackages(packages) {
 function viewPackageDetails(packageId) {
     window.location.href = `package-detail.html?id=${packageId}`;
 }
+
+/* Searsh Bar */
+function filterPackages() {
+  const searchValue = document
+    .getElementById("packageSearch")
+    .value
+    .toLowerCase();
+ 
+  const packages = document.querySelectorAll(".packages-grid > div");
+
+  packages.forEach(pkg => {
+    const text = pkg.innerText.toLowerCase();
+    pkg.style.display = text.includes(searchValue) ? "block" : "none";
+  });
+}

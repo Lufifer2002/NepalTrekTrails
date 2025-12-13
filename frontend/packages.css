@@ -676,3 +676,34 @@
     display: none;
   }
 }
+/* search Bar */
+.package-search-wrapper {
+  position: relative;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+}
+
+.package-search-wrapper input {
+  width: 100%;
+  padding: 16px 50px 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.package-search-wrapper input:focus {
+  border-color: #22c55e;
+}
+
+.package-search-wrapper .search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 16px;
+}
