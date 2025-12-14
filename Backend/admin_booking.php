@@ -19,7 +19,8 @@ if ($adminKey !== "admin_secret_key_123") {
 
 if ($action === "list") {
     try {
-        $stmt = $pdo->query("SELECT * FROM bookings ORDER BY created_at DESC");
+        // Updated query to include the new payment fields and use consistent column names
+        $stmt = $pdo->query("SELECT id, package_id, package_name, customer_name, customer_name as name, email, email as customer_email, phone, people_count, travel_date, payment_option, special_requests, status, transaction_id, paid_amount, total_amount, created_at FROM bookings ORDER BY created_at DESC");
         $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         jsonResponse(["status" => "success", "data" => $bookings]);

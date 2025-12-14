@@ -31,6 +31,7 @@ $people_count = (int)($data["people_count"] ?? 0);
 $travel_date = sanitize($data["travel_date"] ?? "");
 $payment_option = sanitize($data["payment_option"] ?? "");
 $status = sanitize($data["status"] ?? "confirmed"); // Default to confirmed unless specified
+$total_amount = isset($data["total_amount"]) ? floatval($data["total_amount"]) : null; // New field
 
 // Basic validation
 if (!$package_id || !$package_name || !$customer_name || !validateEmail($email) || 
@@ -39,18 +40,28 @@ if (!$package_id || !$package_name || !$customer_name || !validateEmail($email) 
 }
 
 try {
+    // If total_amount is not provided, fetch the package price from the database
+    if ($total_amount === null) {
+        $pkgStmt = $pdo->prepare("SELECT price FROM packages WHERE id = ?");
+        $pkgStmt->execute([$package_id]);
+        $pkg = $pkgStmt->fetch(PDO::FETCH_ASSOC);
+        if ($pkg) {
+            $total_amount = floatval($pkg['price']);
+        }
+    }
+    
     $stmt = $pdo->prepare("
         INSERT INTO bookings (
             package_id, package_name, customer_name, email, phone, 
-            people_count, travel_date, payment_option, special_requests, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            people_count, travel_date, payment_option, special_requests, status, total_amount
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
     
     $special_requests = sanitize($data["special_requests"] ?? "");
     
     $stmt->execute([
         $package_id, $package_name, $customer_name, $email, $phone,
-        $people_count, $travel_date, $payment_option, $special_requests, $status
+        $people_count, $travel_date, $payment_option, $special_requests, $status, $total_amount
     ]);
     
     jsonResponse([

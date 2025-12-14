@@ -532,7 +532,8 @@ async function submitBooking() {
             people_count: document.getElementById('peopleCount').value,
             travel_date: document.getElementById('travelDate').value,
             payment_option: document.getElementById('paymentOption').value,
-            special_requests: document.getElementById('specialRequests').value
+            special_requests: document.getElementById('specialRequests').value,
+            total_amount: parseFloat(document.getElementById('modalPackagePrice').textContent) // Add total amount
         };
         
         // Validate that email matches logged in user

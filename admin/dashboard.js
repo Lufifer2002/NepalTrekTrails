@@ -504,6 +504,12 @@ async function loadBookings() {
             tbody.innerHTML = '';
             
             data.data.forEach(booking => {
+                // Calculate remaining amount (total - paid)
+                // Ensure we're working with numbers, not strings
+                const totalAmount = parseFloat(booking.total_amount) || 0;
+                const paidAmount = parseFloat(booking.paid_amount) || 0;
+                const remainingAmount = totalAmount - paidAmount;
+                
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${booking.id}</td>
@@ -512,6 +518,9 @@ async function loadBookings() {
                     <td>${booking.customer_email || booking.email || 'N/A'}</td>
                     <td>${booking.travel_date || 'N/A'}</td>
                     <td>${booking.status || 'Pending'}</td>
+                    <td>Rs. ${paidAmount > 0 ? paidAmount.toFixed(2) : '0.00'}</td>
+                    <td>${booking.transaction_id || 'N/A'}</td>
+                    <td>Rs. ${remainingAmount > 0 ? remainingAmount.toFixed(2) : '0.00'}</td>
                     <td>
                         <button class="btn btn-primary btn-sm edit-booking" data-id="${booking.id}" data-status="${booking.status || 'Pending'}">
                             <i class="fas fa-edit"></i> Edit

@@ -18,11 +18,11 @@ if (isset($_GET['amount'])) {
     $amount = floatval($_POST['amount']);
 }
 
-// Update booking with transaction ID and set status to confirmed
+// Update booking with transaction ID, paid amount, and set status to confirmed
 if (!empty($bookingId) && !empty($transactionId)) {
     try {
-        $stmt = $pdo->prepare("UPDATE bookings SET transaction_id = ?, status = 'confirmed' WHERE id = ?");
-        $stmt->execute([$transactionId, $bookingId]);
+        $stmt = $pdo->prepare("UPDATE bookings SET transaction_id = ?, paid_amount = ?, status = 'confirmed' WHERE id = ?");
+        $stmt->execute([$transactionId, $amount, $bookingId]);
     } catch (PDOException $e) {
         // Log error but continue to show success page
         error_log("Failed to update booking: " . $e->getMessage());
