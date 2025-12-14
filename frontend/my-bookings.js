@@ -1,44 +1,45 @@
+// ================================
 // My Bookings Page Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Check login status
+// ================================
+
+document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus();
-    
-    // Load user bookings
     loadUserBookings();
 });
 
-// Load user bookings
+// ================================
+// Load User Bookings
+// ================================
 async function loadUserBookings() {
     try {
-        // Get logged in user data
         const loggedUserRaw = localStorage.getItem("loggedUser");
         if (!loggedUserRaw) {
             window.location.href = 'auth.html';
             return;
         }
-        
+
         const userData = JSON.parse(loggedUserRaw);
         const userEmail = userData.email;
-        
+
         if (!userEmail) {
             window.location.href = 'auth.html';
             return;
         }
-        
-        // Show loading state
+
         const bookingsList = document.getElementById('bookingsList');
-        bookingsList.innerHTML = '<div class="loading">Loading your bookings...</div>';
-        
-        // Fetch bookings from backend
-        const response = await fetch(`../Backend/user_bookings.php?email=${encodeURIComponent(userEmail)}`);
-        
+        bookingsList.innerHTML = `<div class="loading">Loading your bookings...</div>`;
+
+        const response = await fetch(
+            `../Backend/user_bookings.php?email=${encodeURIComponent(userEmail)}`
+        );
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
-        if (data.status === 'success' && data.bookings && data.bookings.length > 0) {
+
+        if (data.status === 'success' && data.bookings.length > 0) {
             displayBookings(data.bookings);
         } else {
             bookingsList.innerHTML = `
@@ -51,35 +52,48 @@ async function loadUserBookings() {
             `;
         }
     } catch (error) {
-        console.error('Error loading bookings:', error);
+        console.error(error);
         document.getElementById('bookingsList').innerHTML = `
             <div class="error-message">
                 <i class="fas fa-exclamation-triangle"></i>
                 <h3>Error Loading Bookings</h3>
-                <p>Failed to load your bookings. Please try again later.</p>
+                <p>Please try again later.</p>
                 <button class="btn btn-primary" onclick="loadUserBookings()">Retry</button>
             </div>
         `;
     }
 }
 
-// Display bookings in the list
+// ================================
+// Display Bookings
+// ================================
 function displayBookings(bookings) {
     const bookingsList = document.getElementById('bookingsList');
-    
-    const bookingsHTML = bookings.map(booking => `
+
+    bookingsList.innerHTML = bookings.map(booking => {
+        const status = booking.status.toLowerCase();
+
+        const showPayNow =
+            status === 'pending' &&
+            booking.payment_option === 'Esewa';
+
+        const showCancel =
+            ['pending', 'confirmed', 'payment_failed'].includes(status);
+
+        return `
         <div class="booking-card">
             <div class="booking-header">
                 <div class="booking-id">
                     <span class="label">Booking ID:</span>
                     <span class="value">#${booking.id}</span>
                 </div>
-                <div class="booking-status ${booking.status.toLowerCase()}">
+
+                <div class="booking-status ${status}">
                     <span class="status-indicator"></span>
                     <span class="status-text">${booking.status}</span>
                 </div>
             </div>
-            
+
             <div class="booking-details">
                 <div class="detail-row">
                     <div class="detail-item">
@@ -91,18 +105,18 @@ function displayBookings(bookings) {
                         <span class="value">${formatDate(booking.travel_date)}</span>
                     </div>
                 </div>
-                
+
                 <div class="detail-row">
                     <div class="detail-item">
                         <span class="label">People:</span>
                         <span class="value">${booking.people_count}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="label">Payment Method:</span>
+                        <span class="label">Payment:</span>
                         <span class="value">${formatPaymentMethod(booking.payment_option)}</span>
                     </div>
                 </div>
-                
+
                 <div class="detail-row">
                     <div class="detail-item">
                         <span class="label">Booked On:</span>
@@ -110,152 +124,136 @@ function displayBookings(bookings) {
                     </div>
                 </div>
             </div>
-            
+
             <div class="booking-actions">
                 <button class="btn btn-outline" onclick="viewBookingDetails(${booking.id})">
                     <i class="fas fa-eye"></i> View Details
                 </button>
-                ${booking.status.toLowerCase() === 'pending' && booking.payment_option === 'Esewa' ? 
-                `<button class="btn btn-primary" onclick="retryPayment(${booking.id}, ${booking.package_price || 0})">
+
+                ${showPayNow ? `
+                <button class="btn btn-primary"
+                    onclick="retryPayment(${booking.id}, ${booking.package_price || 0})">
                     <i class="fas fa-credit-card"></i> Pay Now
                 </button>` : ''}
-                ${(booking.status.toLowerCase() === 'pending' || booking.status.toLowerCase() === 'confirmed') ? 
-                `<button class="btn btn-secondary" onclick="cancelBooking(${booking.id})">
+
+                ${showCancel ? `
+                <button class="btn btn-secondary"
+                    onclick="cancelBooking(${booking.id})">
                     <i class="fas fa-times"></i> Cancel Booking
                 </button>` : ''}
             </div>
         </div>
-    `).join('');
-    
-    bookingsList.innerHTML = bookingsHTML;
+        `;
+    }).join('');
 }
 
-// Retry payment for a pending booking
+// ================================
+// Retry Payment
+// ================================
 function retryPayment(bookingId, amount) {
-    // Generate a unique transaction ID for eSewa (booking ID + timestamp)
-    const transactionId = bookingId + '_' + Date.now();
-    
-    // Store booking info in localStorage for use after payment
-    localStorage.setItem('currentBooking', JSON.stringify({
+    const transactionId = bookingId + "_" + Date.now();
+
+    localStorage.setItem("currentBooking", JSON.stringify({
         booking_id: bookingId,
         transaction_id: transactionId,
         amount: amount
     }));
-    
-    // Redirect to eSewa payment page with unique transaction ID
-    window.location.href = `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${amount}`;
+
+    window.location.href =
+        `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${amount}`;
 }
 
-// Format date
-function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+// ================================
+// Cancel Booking
+// ================================
+async function cancelBooking(bookingId) {
+    if (!confirm("Are you sure you want to cancel this booking?")) return;
+
+    try {
+        const user = JSON.parse(localStorage.getItem("loggedUser"));
+        if (!user || !user.email) {
+            alert("Please login first");
+            return;
+        }
+
+        const response = await fetch('../Backend/cancel_booking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                booking_id: bookingId,
+                email: user.email
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            alert("Booking cancelled successfully");
+            loadUserBookings();
+        } else {
+            alert(data.message || "Cancellation failed");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error cancelling booking");
+    }
 }
 
-// Format datetime
-function formatDateTime(dateTimeString) {
-    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateTimeString).toLocaleDateString(undefined, options);
+// ================================
+// Helpers
+// ================================
+function formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 }
 
-// Format payment method
+function formatDateTime(dateStr) {
+    return new Date(dateStr).toLocaleString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
 function formatPaymentMethod(method) {
-    const methods = {
+    const map = {
         'Esewa': 'eSewa',
         'credit_card': 'Credit Card',
         'paypal': 'PayPal',
         'bank_transfer': 'Bank Transfer'
     };
-    return methods[method] || method;
+    return map[method] || method;
 }
 
-// View booking details
-function viewBookingDetails(bookingId) {
-    // In a real implementation, this would show detailed information about the booking
-    // For now, we'll show an alert with the booking ID
-    alert(`Booking Details for #${bookingId}\n\nThis would show detailed booking information in a real implementation.`);
+// ================================
+// View Booking (Placeholder)
+// ================================
+function viewBookingDetails(id) {
+    alert(`Booking details for #${id}`);
 }
 
-// Cancel booking
-async function cancelBooking(bookingId) {
-    if (!confirm('Are you sure you want to cancel this booking? The booking will be marked as cancelled and removed from your list, but will still be visible to administrators.')) {
-        return;
-    }
-    
-    try {
-        // Get logged in user data
-        const loggedUserRaw = localStorage.getItem("loggedUser");
-        if (!loggedUserRaw) {
-            alert('You must be logged in to cancel a booking.');
-            return;
-        }
-        
-        const userData = JSON.parse(loggedUserRaw);
-        const userEmail = userData.email;
-        
-        // Send request to cancel booking
-        const response = await fetch('../Backend/cancel_booking.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                booking_id: bookingId,
-                email: userEmail
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            alert('Booking cancelled successfully!');
-            // Reload the bookings list
-            loadUserBookings();
-        } else {
-            alert('Error: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Error cancelling booking:', error);
-        alert('Error cancelling booking. Please try again.');
-    }
-}
-
-// Check login status and display username
+// ================================
+// Login Status / Header UI
+// ================================
 function checkLoginStatus() {
     const loggedUserRaw = localStorage.getItem("loggedUser");
+    const profile = document.querySelector(".profile-container");
+    const usernameDisplay = document.getElementById("username-display");
+    const usernameName = document.getElementById("username-name");
 
     if (!loggedUserRaw) {
-        // Hide profile container and username display if not logged in
-        const profileContainer = document.querySelector(".profile-container");
-        const usernameDisplay = document.getElementById("username-display");
-        
-        if (profileContainer) profileContainer.style.display = "none";
+        if (profile) profile.style.display = "none";
         if (usernameDisplay) usernameDisplay.style.display = "none";
         return;
     }
 
-    let userData;
-    try {
-        userData = JSON.parse(loggedUserRaw);
-    } catch (e) {
-        console.warn("Invalid loggedUser data in localStorage");
-        return;
-    }
-
-    if (userData && userData.name) {
-        // Display username on left
-        const usernameDisplay = document.getElementById("username-display");
-        const usernameName = document.getElementById("username-name");
-        const profileContainer = document.querySelector(".profile-container");
-
-        if (usernameDisplay && usernameName) {
-            usernameName.textContent = userData.name;
-            usernameDisplay.style.display = "block";
-        }
-        
-        // Show profile container
-        if (profileContainer) {
-            profileContainer.style.display = "block";
-        }
-    }
+    const user = JSON.parse(loggedUserRaw);
+    if (usernameName) usernameName.textContent = user.name || "User";
+    if (usernameDisplay) usernameDisplay.style.display = "block";
+    if (profile) profile.style.display = "block";
 }
