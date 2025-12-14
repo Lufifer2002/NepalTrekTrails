@@ -485,25 +485,54 @@
     transform: scale(1.1);
 }
 
-/* Trek Route Map */
+/* Trek Route Map - Fixed Size */
 .map-content {
     background: #f8f9fa;
     border-radius: 12px;
     padding: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center; /* center the map */
+    box-sizing: border-box;
 }
 
 .map-image-container {
-    position: relative;
+    width: 600px;      /* fixed width */
+    height: 400px;     /* fixed height */
+    overflow: hidden;  
+    border-radius: 12px;
 }
 
 .map-image-container img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 12px;
+    object-fit: cover; /* fills container while keeping aspect ratio */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .map-image-container img:hover {
     transform: scale(1.02);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .map-image-container {
+        width: 100%;    /* full width on smaller screens */
+        height: 250px;  /* adjust height for mobile */
+    }
+}
+
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .map-content {
+        padding: 15px;
+    }
+}
+
 
 .reviews-content {
     display: flex;

@@ -713,25 +713,50 @@ function loadGallery(pkg) {
     
     galleryContainer.innerHTML = galleryHTML;
 }
-
-// Load trek route map
+// load trek map function //
 function loadTrekMap(pkg) {
     const mapContainer = document.getElementById('packageMap');
-    
-    // Check if map image URL is provided in database
+    mapContainer.innerHTML = ''; // Clear previous content
+
     if (pkg.map_image_url && pkg.map_image_url.trim()) {
-        const mapHTML = `
-            <div class="map-image-container" style="text-align: center; background: #f8f9fa; padding: 20px; border-radius: 8px;">
-                <img src="${pkg.map_image_url.trim()}" alt="Trek Route Map" 
-                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer;"
-                     onclick="openMapModal(this.src)"
-                     onerror="this.parentElement.innerHTML='<p style=\"color: #95a5a6; padding: 40px;\"><i class=\"fas fa-map-marked-alt fa-3x\"></i><br><br>Map image not available</p>'">
-                <p style="margin-top: 15px; color: #7f8c8d; font-size: 14px;">
-                    <i class="fas fa-search-plus"></i> Click image to view full size
-                </p>
-            </div>
-        `;
-        mapContainer.innerHTML = mapHTML;
+        const img = document.createElement('img');
+        img.src = pkg.map_image_url.trim();
+        img.alt = 'Trek Route Map';
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.borderRadius = '8px';
+        img.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+        img.style.cursor = 'pointer';
+        img.onclick = () => openMapModal(img.src);
+
+        // Only show placeholder if image really fails
+        img.onerror = () => {
+            img.style.display = 'none'; // hide broken image
+            const fallback = document.createElement('p');
+            fallback.style.color = '#95a5a6';
+            fallback.style.padding = '40px';
+            fallback.style.textAlign = 'center';
+            fallback.innerHTML = '<i class="fas fa-map-marked-alt fa-3x"></i><br><br>Map image not available';
+            mapContainer.appendChild(fallback);
+        };
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'map-image-container';
+        wrapper.style.textAlign = 'center';
+        wrapper.style.background = '#f8f9fa';
+        wrapper.style.padding = '20px';
+        wrapper.style.borderRadius = '8px';
+
+        const caption = document.createElement('p');
+        caption.style.marginTop = '15px';
+        caption.style.color = '#7f8c8d';
+        caption.style.fontSize = '14px';
+        caption.innerHTML = '<i class="fas fa-search-plus"></i> Click image to view full size';
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(caption);
+        mapContainer.appendChild(wrapper);
+
     } else {
         // No map image provided
         mapContainer.innerHTML = `
@@ -742,6 +767,7 @@ function loadTrekMap(pkg) {
         `;
     }
 }
+
 
 // Load reviews - but this element doesn't exist in the HTML, so we'll load recommendations instead
 function loadReviews(pkg) {
