@@ -234,7 +234,9 @@ function formatPaymentMethod(method) {
 // View Booking (Placeholder)
 // ================================
 function viewBookingDetails(id) {
-    alert(`Booking details for #${id}`);
+    // Redirect to package detail page with booking ID
+    // We'll pass the booking ID as a parameter so we can fetch the booking details
+    window.location.href = `package-detail.html?bookingId=${id}`;
 }
 
 // ================================

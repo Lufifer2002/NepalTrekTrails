@@ -14,13 +14,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Only allow access via GET requests
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+// Allow access via both GET and POST requests for flexibility
+if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(["status" => "error", "message" => "Method not allowed"], 405);
 }
 
-// Get email from query parameter
-$email = isset($_GET['email']) ? sanitize($_GET['email']) : null;
+// Get email from query parameter or POST data
+$email = null;
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $email = isset($_GET['email']) ? sanitize($_GET['email']) : null;
+} else {
+    $data = getJsonBody();
+    $email = isset($data['email']) ? sanitize($data['email']) : null;
+}
+
+// If email not in GET/POST data, try to get it from query parameters for POST requests
+if (!$email && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = isset($_GET['email']) ? sanitize($_GET['email']) : null;
+}
 
 if (!$email) {
     jsonResponse(["status" => "error", "message" => "Email is required"], 400);
@@ -41,6 +52,9 @@ try {
             b.payment_option,
             b.special_requests,
             b.status,
+            b.transaction_id,
+            b.paid_amount,
+            b.total_amount,
             b.created_at,
             p.price as package_price
         FROM bookings b

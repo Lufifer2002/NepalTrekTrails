@@ -3,11 +3,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check login status first
     checkLoginStatus();
     
-    // Get package ID from URL
+    // Get package ID or booking ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     const packageId = urlParams.get('id');
+    const bookingId = urlParams.get('bookingId');
     
-    if (packageId) {
+    if (bookingId) {
+        // Load booking details if booking ID is provided
+        loadBookingDetails(bookingId);
+    } else if (packageId) {
+        // Load package details if package ID is provided
         loadPackageDetails(packageId);
     } else {
         window.location.href = 'packages.html';
@@ -136,6 +141,240 @@ async function loadPackageDetails(id) {
         console.error('Error loading package details:', error);
         alert('Error loading package details. Please try again.');
         window.location.href = 'packages.html';
+    }
+}
+
+// Load booking details
+async function loadBookingDetails(bookingId) {
+    try {
+        // Get user email from localStorage
+        const loggedUserRaw = localStorage.getItem('loggedUser');
+        if (!loggedUserRaw) {
+            alert('Please login to view booking details.');
+            window.location.href = 'auth.html';
+            return;
+        }
+        
+        let userData;
+        try {
+            userData = JSON.parse(loggedUserRaw);
+        } catch (e) {
+            console.error('Error parsing user data:', e);
+            alert('Error loading user data. Please login again.');
+            window.location.href = 'auth.html';
+            return;
+        }
+        
+        // Fetch user's bookings from backend
+        const response = await fetch('../Backend/user_bookings.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'list',
+                email: userData.email
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success' && data.bookings) {
+            // Find the specific booking by ID
+            const booking = data.bookings.find(b => b.id == bookingId);
+            
+            if (booking) {
+                // Update page title and breadcrumb
+                document.title = `Booking #${booking.id} - Nepal Trek Trails`;
+                document.getElementById('breadcrumbPackage').textContent = `Booking #${booking.id}`;
+                
+                // Show only the booking information div
+                let bookingInfoHTML = `
+                    <div class="booking-form-details">
+                        <h3>Booking Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <strong>Booking ID:</strong>
+                                <span>${booking.id}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Package:</strong>
+                                <span>${booking.package_name}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Full Name:</strong>
+                                <span>${booking.customer_name}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Email:</strong>
+                                <span>${booking.email}</span>
+                            </div>
+                `;
+                
+                // Only show phone if it was provided
+                if (booking.phone && booking.phone.trim() !== '') {
+                    bookingInfoHTML += `
+                        <div class="detail-item">
+                            <strong>Phone:</strong>
+                            <span>${booking.phone}</span>
+                        </div>
+                    `;
+                }
+                
+                bookingInfoHTML += `
+                            <div class="detail-item">
+                                <strong>Number of People:</strong>
+                                <span>${booking.people_count}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Travel Date:</strong>
+                                <span>${booking.travel_date}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Payment Method:</strong>
+                                <span>${booking.payment_option}</span>
+                            </div>
+                `;
+                
+                // Show payment details if booking is confirmed
+                if (booking.status === 'confirmed') {
+                    const totalAmount = parseFloat(booking.total_amount || 0);
+                    const paidAmount = parseFloat(booking.paid_amount || 0);
+                    const remainingAmount = totalAmount - paidAmount;
+                    
+                    bookingInfoHTML += `
+                        <div class="detail-item">
+                            <strong>Paid Amount:</strong>
+                            <span>Rs. ${paidAmount.toFixed(2)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Remaining Amount:</strong>
+                            <span>Rs. ${remainingAmount.toFixed(2)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Transaction ID:</strong>
+                            <span>${booking.transaction_id || 'N/A'}</span>
+                        </div>
+                    `;
+                }
+                
+                // Only show special requests if provided
+                if (booking.special_requests && booking.special_requests.trim() !== '') {
+                    bookingInfoHTML += `
+                        <div class="detail-item full-width">
+                            <strong>Special Requests:</strong>
+                            <span>${booking.special_requests}</span>
+                        </div>
+                    `;
+                }
+                
+                bookingInfoHTML += `
+                            <div class="detail-item">
+                                <strong>Status:</strong>
+                                <span class="status-${booking.status}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Booking Date:</strong>
+                                <span>${new Date(booking.created_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Show action buttons based on booking status
+                let actionButtonsHTML = '';
+                if (booking.status === 'pending' || booking.status === 'failed') {
+                    actionButtonsHTML = `
+                        <div class="booking-actions-detail">
+                            <button class="btn btn-primary" onclick="retryPayment(${booking.id}, ${parseFloat(booking.total_amount || 0)})">
+                                <i class="fas fa-credit-card"></i> Pay Now
+                            </button>
+                            <button class="btn btn-secondary" onclick="cancelBookingFromDetail(${booking.id})">
+                                <i class="fas fa-times"></i> Cancel Booking
+                            </button>
+                        </div>
+                    `;
+                } else if (booking.status === 'confirmed') {
+                    // Show only cancel button for confirmed bookings
+                    actionButtonsHTML = `
+                        <div class="booking-actions-detail">
+                            <button class="btn btn-secondary" onclick="cancelBookingFromDetail(${booking.id})">
+                                <i class="fas fa-times"></i> Cancel Booking
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                // Add action buttons after the description
+                const actionContainer = document.createElement('div');
+                actionContainer.innerHTML = actionButtonsHTML;
+                document.getElementById('packageDescription').parentNode.insertBefore(actionContainer, document.getElementById('packageDescription').nextSibling);
+
+                // Set the content to only the booking information
+                document.getElementById('packageDescription').innerHTML = bookingInfoHTML;
+                
+                // Hide booking button since this is already booked
+                const bookNowBtn = document.getElementById('bookNowBtn');
+                if (bookNowBtn) {
+                    bookNowBtn.style.display = 'none';
+                }
+                
+                // Update page heading to indicate this is a booking detail view
+                const heading = document.querySelector('.package-heading h1');
+                if (heading) {
+                    heading.textContent = `Booking Details #${booking.id}`;
+                }
+                
+                // Hide all other sections except the main content
+                const highlightsSection = document.querySelector('.package-highlights');
+                if (highlightsSection) {
+                    highlightsSection.style.display = 'none';
+                }
+                
+                // Hide all info sections (itinerary, what's included, gallery, map, recommendations)
+                const infoSections = document.querySelectorAll('.info-section');
+                infoSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Also hide the package gallery section
+                const packageGallery = document.querySelector('.package-gallery');
+                if (packageGallery) {
+                    packageGallery.style.display = 'none';
+                }
+                
+                // Hide the package actions section (contains Save for Later button)
+                const packageActions = document.querySelector('.package-actions');
+                if (packageActions) {
+                    packageActions.style.display = 'none';
+                }
+                
+                // Hide the package meta section (duration, difficulty, price, rating)
+                const packageMeta = document.querySelector('.package-meta');
+                if (packageMeta) {
+                    packageMeta.style.display = 'none';
+                }
+                
+                // Hide the "About This Trek" heading, but keep the description container for booking info
+                const aboutHeading = document.querySelector('.package-description h3');
+                if (aboutHeading) {
+                    aboutHeading.style.display = 'none';
+                }
+
+            } else {
+                // Booking not found
+                alert('Booking not found.');
+                window.location.href = 'my-bookings.html';
+            }
+        } else {
+            // Error occurred
+            alert(data.message || 'Error loading booking details.');
+            window.location.href = 'my-bookings.html';
+        }
+    } catch (error) {
+        console.error('Error loading booking details:', error);
+        alert('Error loading booking details. Please try again.');
+        window.location.href = 'my-bookings.html';
     }
 }
 
@@ -793,4 +1032,61 @@ function renderRecommendations(recommendations) {
     }
     
     container.innerHTML = html;
+}
+
+// Cancel booking from detail page
+function cancelBookingFromDetail(bookingId) {
+    if (!confirm('Are you sure you want to cancel this booking?')) {
+        return;
+    }
+    
+    // Get user email from localStorage
+    const loggedUserRaw = localStorage.getItem('loggedUser');
+    if (!loggedUserRaw) {
+        alert('Please login to cancel booking.');
+        window.location.href = 'auth.html';
+        return;
+    }
+    
+    let userData;
+    try {
+        userData = JSON.parse(loggedUserRaw);
+    } catch (e) {
+        console.error('Error parsing user data:', e);
+        alert('Error loading user data. Please login again.');
+        window.location.href = 'auth.html';
+        return;
+    }
+    
+    // Send cancel request to backend
+    fetch('../Backend/cancel_booking.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            booking_id: bookingId,
+            email: userData.email
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Booking cancelled successfully!');
+            // Reload the page to reflect the changes
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error cancelling booking:', error);
+        alert('Error cancelling booking. Please try again.');
+    });
+}
+
+// Retry payment for a booking
+function retryPayment(bookingId, totalAmount) {
+    // Redirect to payment page
+    window.location.href = `../Backend/esewaPay.php?orderId=${bookingId}_${Date.now()}&bookingId=${bookingId}&amount=${totalAmount * 0.1}`;
 }
