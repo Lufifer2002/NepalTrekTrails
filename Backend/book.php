@@ -21,6 +21,13 @@ $packageId      = isset($_POST['packageId']) ? $_POST['packageId'] : "";
 $paymentOption  = isset($_POST['paymentOption']) ? $_POST['paymentOption'] : "";
 $specialRequest = isset($_POST['specialRequests']) ? trim($_POST['specialRequests']) : "";
 
+// Validate travel date is not in the past
+$today = new DateTime();
+$travelDateTime = new DateTime($travelDate);
+if ($travelDateTime < $today) {
+    die("Travel date cannot be in the past.");
+}
+
 // -----------------------------
 // 3. Get package price (from modal)
 // -----------------------------

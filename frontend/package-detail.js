@@ -1090,3 +1090,17 @@ function retryPayment(bookingId, totalAmount) {
     // Redirect to payment page
     window.location.href = `../Backend/esewaPay.php?orderId=${bookingId}_${Date.now()}&bookingId=${bookingId}&amount=${totalAmount * 0.1}`;
 }
+
+// Set minimum date to today to prevent selecting past dates
+function setMinDate() {
+    const today = new Date().toISOString().split('T')[0];
+    const travelDateInput = document.getElementById('travelDate');
+    if (travelDateInput) {
+        travelDateInput.setAttribute('min', today);
+    }
+}
+
+// Call setMinDate when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setMinDate();
+});

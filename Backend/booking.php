@@ -39,6 +39,13 @@ if (!$package_id || !$package_name || !$customer_name || !validateEmail($email) 
     jsonResponse(["status" => "error", "message" => "All fields are required"], 400);
 }
 
+// Validate travel date is not in the past
+$today = new DateTime();
+$travelDateTime = new DateTime($travel_date);
+if ($travelDateTime < $today) {
+    jsonResponse(["status" => "error", "message" => "Travel date cannot be in the past"], 400);
+}
+
 try {
     // If total_amount is not provided, fetch the package price from the database
     if ($total_amount === null) {
