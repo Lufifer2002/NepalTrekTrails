@@ -51,19 +51,28 @@ async function logout() {
 
 // Navigation
 function showSection(sectionId) {
-    // Hide all sections
+    // Hide all sections by removing the active class
     document.querySelectorAll('.section').forEach(section => {
-        section.style.display = 'none';
+        section.classList.remove('active');
     });
     
-    // Show selected section
-    document.getElementById(`${sectionId}-section`).style.display = 'block';
+    // Show selected section by adding the active class
+    const sectionElement = document.getElementById(`${sectionId}-section`);
+    
+    if (sectionElement) {
+        sectionElement.classList.add('active');
+    } else {
+        console.error('Section element not found for:', sectionId);
+    }
     
     // Update active nav link
     document.querySelectorAll('.sidebar-nav a').forEach(link => {
         link.classList.remove('active');
     });
-    document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+    const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
     
     // Load data for the selected section
     switch(sectionId) {
@@ -84,6 +93,9 @@ function showSection(sectionId) {
             break;
         case 'subscribers':
             loadSubscribers();
+            break;
+        case 'users':
+            loadUsers();
             break;
     }
 }
@@ -151,6 +163,20 @@ async function loadDashboardStats() {
         });
         const subscribersData = await subscribersResponse.json();
         document.getElementById('total-subscribers').textContent = subscribersData.data ? subscribersData.data.length : 0;
+        
+        // Fetch users count
+        const usersResponse = await fetch('../Backend/admin_users.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'list',
+                admin_key: 'admin_secret_key_123'
+            })
+        });
+        const usersData = await usersResponse.json();
+        document.getElementById('total-users').textContent = usersData.data ? usersData.data.length : 0;
     } catch (error) {
         console.error('Error loading dashboard stats:', error);
     }
@@ -1698,3 +1724,98 @@ document.addEventListener('DOMContentLoaded', function() {
     updateRemoveButtons('itinerary-day', 'remove-day');
     updateRemoveButtons('included-item', 'remove-included');
 });
+
+// Fetch and display users
+async function loadUsers() {
+    try {
+        const response = await fetch('../Backend/admin_users.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'list',
+                admin_key: 'admin_secret_key_123'
+            })
+        });
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            const tbody = document.getElementById('users-table-body');
+            if (!tbody) {
+                console.error('users-table-body element not found');
+                return;
+            }
+            tbody.innerHTML = '';
+            
+            data.data.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name || 'N/A'}</td>
+                    <td>${user.email || 'N/A'}</td>
+                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td>
+                        ${user.email !== 'admin@nepaltrektrails.com' ? 
+                        `<button class="btn btn-danger btn-sm delete-user" data-id="${user.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>` : 
+                        `<button class="btn btn-secondary btn-sm" disabled>
+                            <i class="fas fa-lock"></i> Admin
+                        </button>`}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-user').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const userId = e.target.closest('button').getAttribute('data-id');
+                    deleteUser(userId);
+                });
+            });
+            
+            // Update total users count in dashboard
+            const usersCountElement = document.getElementById('total-users');
+            if (usersCountElement) {
+                usersCountElement.textContent = data.data.length;
+            }
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+    }
+}
+
+// Delete user
+async function deleteUser(userId) {
+    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('../Backend/admin_users.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'delete',
+                id: userId,
+                admin_key: 'admin_secret_key_123'
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            alert('User deleted successfully!');
+            loadUsers(); // Refresh the user list
+        } else {
+            alert('Error: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        alert('Error deleting user');
+    }
+}
