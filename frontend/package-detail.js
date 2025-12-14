@@ -557,6 +557,8 @@ async function submitBooking() {
             if (data.status === 'success') {
                 // Generate a unique transaction ID for eSewa (booking ID + timestamp)
                 const amount = parseFloat(document.getElementById('modalPackagePrice').textContent);
+                // Calculate 10% deposit instead of full amount
+                const depositAmount = amount * 0.10;
                 const bookingId = data.booking_id;
                 const transactionId = bookingId + '_' + Date.now(); // Unique transaction ID
                 
@@ -565,11 +567,12 @@ async function submitBooking() {
                     booking_id: bookingId,
                     transaction_id: transactionId,
                     amount: amount,
+                    deposit_amount: depositAmount,
                     package_name: bookingData.package_name
                 }));
                 
-                // Redirect to eSewa payment page with unique transaction ID
-                window.location.href = `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${amount}`;
+                // Redirect to eSewa payment page with 10% deposit amount
+                window.location.href = `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${depositAmount}`;
             } else {
                 alert('Error: ' + data.message);
             }

@@ -37,5 +37,11 @@ $esewaUrl = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
     <input type="hidden" name="signature" value="<?= $signature; ?>">
 </form>
 
+<div style="text-align: center; margin-top: 50px;">
+    <h3>Redirecting to eSewa Payment Gateway...</h3>
+    <p>You will be charged a deposit of Rs. <?= number_format($amount, 2) ?> (10% of total amount)</p>
+    <p>Please wait while we redirect you to the secure payment page.</p>
+</div>
+
 </body>
 </html>
