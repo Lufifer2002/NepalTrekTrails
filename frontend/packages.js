@@ -87,11 +87,16 @@ function filterPackages() {
     .getElementById("packageSearch")
     .value
     .toLowerCase();
- 
+
   const packages = document.querySelectorAll(".packages-grid > div");
 
   packages.forEach(pkg => {
-    const text = pkg.innerText.toLowerCase();
-    pkg.style.display = text.includes(searchValue) ? "block" : "none";
+    // ONLY package name (h3)
+    const packageName = pkg.querySelector("h3").textContent.toLowerCase();
+
+    pkg.style.display = packageName.includes(searchValue)
+      ? "block"
+      : "none";
   });
 }
+
