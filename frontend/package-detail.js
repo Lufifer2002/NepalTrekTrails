@@ -807,6 +807,31 @@ async function submitBooking() {
             return;
         }
         
+        // Show loading indicator
+        const bookBtn = document.querySelector('#bookingForm .btn-primary');
+        const originalBtnText = bookBtn.innerHTML;
+        bookBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        bookBtn.disabled = true;
+        
+        // First check if user already has an active booking
+        const activeBookingCheck = await fetch(`../Backend/user_bookings.php?email=${encodeURIComponent(userData.email)}`);
+        if (activeBookingCheck.ok) {
+            const bookingDataResponse = await activeBookingCheck.json();
+            if (bookingDataResponse.status === 'success') {
+                // Filter out cancelled and completed bookings
+                const activeBookings = bookingDataResponse.bookings.filter(booking => 
+                    booking.status !== 'cancelled' && booking.status !== 'completed'
+                );
+                
+                if (activeBookings.length > 0) {
+                    bookBtn.innerHTML = originalBtnText;
+                    bookBtn.disabled = false;
+                    alert('You already have an active booking. Please complete or cancel your existing booking before making a new one. You can view your bookings in the "My Bookings" section.');
+                    return;
+                }
+            }
+        }
+        
         // If eSewa is selected, redirect to payment page
         if (bookingData.payment_option === 'Esewa') {
             // First save the booking with pending status if it doesn't exist or is pending
@@ -840,6 +865,9 @@ async function submitBooking() {
                 // Redirect to eSewa payment page with 10% deposit amount
                 window.location.href = `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${depositAmount}`;
             } else {
+                // Reset button
+                bookBtn.innerHTML = originalBtnText;
+                bookBtn.disabled = false;
                 alert('Error: ' + data.message);
             }
         } else {
@@ -855,6 +883,10 @@ async function submitBooking() {
             const data = await response.json();
             
             if (data.status === 'success') {
+                // Reset button
+                bookBtn.innerHTML = originalBtnText;
+                bookBtn.disabled = false;
+                
                 alert('Booking submitted successfully! You can view your booking in "My Bookings" section.');
                 document.getElementById('bookingModal').style.display = 'none';
                 document.getElementById('bookingForm').reset();
@@ -866,11 +898,20 @@ async function submitBooking() {
                     }
                 }, 500);
             } else {
+                // Reset button
+                bookBtn.innerHTML = originalBtnText;
+                bookBtn.disabled = false;
                 alert('Error: ' + data.message);
             }
         }
     } catch (error) {
         console.error('Error submitting booking:', error);
+        // Reset button in case of error
+        const bookBtn = document.querySelector('#bookingForm .btn-primary');
+        if (bookBtn) {
+            bookBtn.innerHTML = originalBtnText;
+            bookBtn.disabled = false;
+        }
         alert('Error submitting booking. Please try again.');
     }
 }

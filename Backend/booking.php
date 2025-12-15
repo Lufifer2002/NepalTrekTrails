@@ -47,6 +47,22 @@ if ($travelDateTime < $today) {
 }
 
 try {
+    // Check if user already has an active booking (not cancelled or completed)
+    $checkStmt = $pdo->prepare("
+        SELECT COUNT(*) as active_bookings 
+        FROM bookings 
+        WHERE email = ? AND status NOT IN ('cancelled', 'completed')
+    ");
+    $checkStmt->execute([$email]);
+    $result = $checkStmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($result['active_bookings'] > 0) {
+        jsonResponse([
+            "status" => "error", 
+            "message" => "You already have an active booking. Please complete or cancel your existing booking before making a new one."
+        ], 400);
+    }
+
     // If total_amount is not provided, fetch the package price from the database
     if ($total_amount === null) {
         $pkgStmt = $pdo->prepare("SELECT price FROM packages WHERE id = ?");
