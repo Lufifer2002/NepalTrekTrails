@@ -18,10 +18,11 @@ if (isset($_GET['amount'])) {
     $amount = floatval($_POST['amount']);
 }
 
-// Update booking with transaction ID, paid amount, and set status to confirmed
+// Update booking with transaction ID and paid amount, but keep status as pending
+// Admin will confirm the booking separately
 if (!empty($bookingId) && !empty($transactionId)) {
     try {
-        $stmt = $pdo->prepare("UPDATE bookings SET transaction_id = ?, paid_amount = ?, status = 'confirmed' WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE bookings SET transaction_id = ?, paid_amount = ? WHERE id = ?");
         $stmt->execute([$transactionId, $amount, $bookingId]);
     } catch (PDOException $e) {
         // Log error but continue to show success page
@@ -80,6 +81,14 @@ if (!empty($bookingId) && !empty($transactionId)) {
             display: inline-block;
             width: 150px;
         }
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -88,12 +97,16 @@ if (!empty($bookingId) && !empty($transactionId)) {
     <div class="success-icon">✓</div>
     <h1>Payment Successful!</h1>
     <p>Your payment has been processed successfully.</p>
+    
+    <div class="note">
+        <strong>Note:</strong> Your booking is currently in "pending" status. An administrator will review and confirm your booking shortly. 
+    </div>
 
     <div class="details">
         <div><span class="label">Booking ID:</span> <?= htmlspecialchars($bookingId ?: '—') ?></div>
         <div><span class="label">Transaction ID:</span> <?= htmlspecialchars($transactionId ?: '—') ?></div>
-        <div><span class="label">Amount:</span> Rs. <?= $amount > 0 ? number_format($amount, 2) : '—' ?></div>
-        <div><span class="label">Status:</span> Success</div>
+        <div><span class="label">Amount Paid:</span> Rs. <?= $amount > 0 ? number_format($amount, 2) : '—' ?></div>
+        <div><span class="label">Current Status:</span> Pending (Awaiting Admin Confirmation)</div>
     </div>
 
     <a href="../frontend/contact.html" class="btn">Contact Support</a>

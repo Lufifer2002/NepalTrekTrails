@@ -50,57 +50,47 @@ async function logout() {
 }
 
 // Navigation
-function showSection(sectionId) {
-    // Hide all sections by removing the active class
-    document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Show selected section by adding the active class
-    const sectionElement = document.getElementById(`${sectionId}-section`);
-    
-    if (sectionElement) {
-        sectionElement.classList.add('active');
-    } else {
-        console.error('Section element not found for:', sectionId);
-    }
-    
-    // Update active nav link
-    document.querySelectorAll('.sidebar-nav a').forEach(link => {
-        link.classList.remove('active');
-    });
-    const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
-    if (activeLink) {
-        activeLink.classList.add('active');
-    }
-    
-    // Load data for the selected section
-    switch(sectionId) {
-        case 'dashboard':
+document.querySelectorAll('.sidebar-nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links
+        document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+        
+        // Add active class to clicked link
+        this.classList.add('active');
+        
+        // Get section to show
+        const section = this.getAttribute('data-section');
+        
+        // Hide all sections
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        
+        // Show selected section
+        if (section === 'dashboard') {
+            document.getElementById('dashboard-section').style.display = 'block';
             loadDashboardStats();
-            break;
-        case 'packages':
-            loadPackages();
-            break;
-        case 'bookings':
-            loadBookings();
-            break;
-        case 'blogs':
-            loadBlogs();
-            break;
-        case 'contacts':
-            loadContacts();
-            break;
-        case 'subscribers':
-            loadSubscribers();
-            break;
-        case 'users':
+        } else if (section === 'users') {
+            document.getElementById('users-section').style.display = 'block';
             loadUsers();
-            break;
-    }
-}
+        } else if (section === 'packages') {
+            document.getElementById('packages-section').style.display = 'block';
+            loadPackages();
+        } else if (section === 'bookings') {
+            document.getElementById('bookings-section').style.display = 'block';
+            loadBookings();
+        } else if (section === 'blogs') {
+            document.getElementById('blogs-section').style.display = 'block';
+            loadBlogs();
+        } else if (section === 'contacts') {
+            document.getElementById('contacts-section').style.display = 'block';
+            loadContacts();
+        }
+        // Subscribers section removed
+    });
+});
 
-// Fetch and display statistics
+// Fetch dashboard stats
 async function loadDashboardStats() {
     try {
         // Fetch packages count
@@ -131,11 +121,6 @@ async function loadDashboardStats() {
         const bookingsData = await bookingsResponse.json();
         document.getElementById('total-bookings').textContent = bookingsData.data ? bookingsData.data.length : 0;
         
-        // Fetch blogs count
-        const blogsResponse = await fetch('../Backend/admin_blog.php');
-        const blogsData = await blogsResponse.json();
-        document.getElementById('total-blogs').textContent = blogsData.blogs ? blogsData.blogs.length : 0;
-        
         // Fetch contacts count
         const contactsResponse = await fetch('../Backend/admin_contact.php', {
             method: 'POST',
@@ -150,20 +135,6 @@ async function loadDashboardStats() {
         const contactsData = await contactsResponse.json();
         document.getElementById('total-contacts').textContent = contactsData.data ? contactsData.data.length : 0;
         
-        // Fetch subscribers count
-        const subscribersResponse = await fetch('../Backend/admin_subscriber.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'list',
-                admin_key: 'admin_secret_key_123'
-            })
-        });
-        const subscribersData = await subscribersResponse.json();
-        document.getElementById('total-subscribers').textContent = subscribersData.data ? subscribersData.data.length : 0;
-        
         // Fetch users count
         const usersResponse = await fetch('../Backend/admin_users.php', {
             method: 'POST',
@@ -177,6 +148,8 @@ async function loadDashboardStats() {
         });
         const usersData = await usersResponse.json();
         document.getElementById('total-users').textContent = usersData.data ? usersData.data.length : 0;
+        
+        // Subscribers count removed
     } catch (error) {
         console.error('Error loading dashboard stats:', error);
     }
@@ -582,10 +555,45 @@ async function loadBookings() {
 
 // Edit booking
 function editBooking(bookingId, currentStatus) {
-    const newStatus = prompt('Enter new status (Pending, Confirmed, Cancelled):', currentStatus);
-    if (newStatus !== null && newStatus !== currentStatus) {
-        updateBookingStatus(bookingId, newStatus);
-    }
+    // Create a modal for status update
+    const modalHtml = `
+        <div id="statusModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 10000;">
+            <div style="background: white; padding: 30px; border-radius: 10px; width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                <h3 style="margin-top: 0;">Update Booking Status</h3>
+                <p>Current Status: <strong>${currentStatus}</strong></p>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 10px;">Select New Status:</label>
+                    <select id="statusSelect" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="pending" ${currentStatus.toLowerCase() === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="confirmed" ${currentStatus.toLowerCase() === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                        <option value="payment_failed" ${currentStatus.toLowerCase() === 'payment_failed' ? 'selected' : ''}>Payment Failed</option>
+                        <option value="cancelled" ${currentStatus.toLowerCase() === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                        <option value="completed" ${currentStatus.toLowerCase() === 'completed' ? 'selected' : ''}>Completed</option>
+                    </select>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button id="cancelStatusBtn" style="padding: 10px 20px; background: #ccc; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+                    <button id="updateStatusBtn" style="padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">Update Status</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Add event listeners
+    document.getElementById('cancelStatusBtn').addEventListener('click', function() {
+        document.getElementById('statusModal').remove();
+    });
+    
+    document.getElementById('updateStatusBtn').addEventListener('click', function() {
+        const newStatus = document.getElementById('statusSelect').value;
+        if (newStatus !== currentStatus.toLowerCase()) {
+            updateBookingStatus(bookingId, newStatus);
+        }
+        document.getElementById('statusModal').remove();
+    });
 }
 
 // Update booking status
@@ -776,86 +784,6 @@ async function deleteContact(contactId) {
     } catch (error) {
         console.error('Error deleting contact:', error);
         alert('Error deleting contact');
-    }
-}
-
-// Fetch and display subscribers
-async function loadSubscribers() {
-    try {
-        const response = await fetch('../Backend/admin_subscriber.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'list',
-                admin_key: 'admin_secret_key_123'
-            })
-        });
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            const tbody = document.getElementById('subscribers-table-body');
-            tbody.innerHTML = '';
-            
-            data.data.forEach(subscriber => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${subscriber.id}</td>
-                    <td>${subscriber.email}</td>
-                    <td>${new Date(subscriber.subscribed_at).toLocaleDateString()}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm delete-subscriber" data-id="${subscriber.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-subscriber').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const subscriberId = e.target.closest('button').getAttribute('data-id');
-                    deleteSubscriber(subscriberId);
-                });
-            });
-        }
-    } catch (error) {
-        console.error('Error loading subscribers:', error);
-    }
-}
-
-// Delete subscriber
-async function deleteSubscriber(subscriberId) {
-    if (!confirm('Are you sure you want to delete this subscriber?')) {
-        return;
-    }
-    
-    try {
-        const response = await fetch('../Backend/admin_subscriber.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'delete',
-                id: subscriberId,
-                admin_key: 'admin_secret_key_123'
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            alert('Subscriber deleted successfully!');
-            loadSubscribers(); // Refresh the subscriber list
-        } else {
-            alert('Error: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Error deleting subscriber:', error);
-        alert('Error deleting subscriber');
     }
 }
 

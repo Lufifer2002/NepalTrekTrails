@@ -56,13 +56,6 @@ CREATE TABLE IF NOT EXISTS contact_messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create newsletter_subscribers table
-CREATE TABLE IF NOT EXISTS newsletter_subscribers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Insert sample admin user (email: admin@nepaltrektrails.com, password: SecurePass!2025)
 INSERT INTO users (name, email, password_hash) VALUES 
 ('Admin User', 'admin@nepaltrektrails.com', '$2y$10$vwtIgw4BdzCdAWp3qx.QS.1kzTW3bOx/S50/BdTRz/RtU5hkAhB3G');
