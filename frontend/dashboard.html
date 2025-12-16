@@ -299,5 +299,13 @@
     </div>
   </footer>
   <script src="dashboard.js"></script>
+  <script src="packages.js"></script>
+  <script>
+    // Load packages when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load packages from backend
+      loadPackages();
+    });
+  </script>
 </body>
 </html>

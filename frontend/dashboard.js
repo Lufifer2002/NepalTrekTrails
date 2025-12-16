@@ -97,6 +97,37 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+  
+  // SIGN OUT FUNCTIONALITY
+  const signoutBtn = document.querySelector(".signout");
+  if (signoutBtn) {
+    signoutBtn.addEventListener("click", async function(e) {
+      e.preventDefault();
+      
+      try {
+        // Call backend logout
+        const response = await fetch('../Backend/auth.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'logout'
+          })
+        });
+        
+        // We don't need to check the response since we're logging out anyway
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+      
+      // Remove user data from localStorage
+      localStorage.removeItem("loggedUser");
+      
+      // Redirect to auth page
+      window.location.href = "auth.html";
+    });
+  }
 });
 
 document.addEventListener('click', (e) => {
