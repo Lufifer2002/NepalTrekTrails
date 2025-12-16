@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "config.php";
 require_once "utils.php";
 
@@ -73,17 +74,20 @@ try {
         }
     }
     
+    // Get user ID from session if available
+    $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    
     $stmt = $pdo->prepare("
         INSERT INTO bookings (
-            package_id, package_name, customer_name, email, phone, 
+            user_id, package_id, package_name, customer_name, email, phone, 
             people_count, travel_date, payment_option, special_requests, status, total_amount
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
     
     $special_requests = sanitize($data["special_requests"] ?? "");
     
     $stmt->execute([
-        $package_id, $package_name, $customer_name, $email, $phone,
+        $userId, $package_id, $package_name, $customer_name, $email, $phone,
         $people_count, $travel_date, $payment_option, $special_requests, $status, $total_amount
     ]);
     

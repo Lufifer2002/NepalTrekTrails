@@ -50,18 +50,21 @@ try {
     $package = $stmt->fetch(PDO::FETCH_ASSOC);
     $packageName = $package ? $package['name'] : "Unknown Package";
     
+    // Get user ID from session if available
+    $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    
     // Insert booking with pending status
     $stmt = $pdo->prepare("
         INSERT INTO bookings (
-            package_id, package_name, customer_name, email, phone, 
+            user_id, package_id, package_name, customer_name, email, phone, 
             people_count, travel_date, payment_option, special_requests, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
     
     $status = "pending"; // Initially set to pending
     
     $stmt->execute([
-        $packageId, $packageName, $customerName, $customerEmail, $customerPhone,
+        $userId, $packageId, $packageName, $customerName, $customerEmail, $customerPhone,
         $peopleCount, $travelDate, $paymentOption, $specialRequest, $status
     ]);
     

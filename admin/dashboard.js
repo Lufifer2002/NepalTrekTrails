@@ -512,6 +512,7 @@ async function loadBookings() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${booking.id}</td>
+                    <td>${booking.user_id || 'N/A'}</td>
                     <td>${booking.package_name || 'N/A'}</td>
                     <td>${booking.customer_name || booking.name || 'N/A'}</td>
                     <td>${booking.customer_email || booking.email || 'N/A'}</td>
