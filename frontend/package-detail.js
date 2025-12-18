@@ -840,6 +840,7 @@ async function submitBooking() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include', // Include credentials (cookies) for session
                 body: JSON.stringify({...bookingData, status: 'pending'})
             });
             
@@ -877,6 +878,7 @@ async function submitBooking() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include', // Include credentials (cookies) for session
                 body: JSON.stringify(bookingData)
             });
             

@@ -513,11 +513,14 @@ async function loadBookings() {
                 row.innerHTML = `
                     <td>${booking.id}</td>
                     <td>${booking.user_id || 'N/A'}</td>
+                    <td>${booking.package_id || 'N/A'}</td>
                     <td>${booking.package_name || 'N/A'}</td>
                     <td>${booking.customer_name || booking.name || 'N/A'}</td>
                     <td>${booking.customer_email || booking.email || 'N/A'}</td>
+                    <td>${booking.people_count || booking.email || 'N/A'}</td>
                     <td>${booking.travel_date || 'N/A'}</td>
                     <td>${booking.status || 'Pending'}</td>
+                    <td>Rs. ${totalAmount > 0 ? totalAmount.toFixed(2) : '0.00'}</td>
                     <td>Rs. ${paidAmount > 0 ? paidAmount.toFixed(2) : '0.00'}</td>
                     <td>${booking.transaction_id || 'N/A'}</td>
                     <td>Rs. ${remainingAmount > 0 ? remainingAmount.toFixed(2) : '0.00'}</td>
@@ -860,6 +863,7 @@ async function loadBlogs() {
                 row.innerHTML = `
                     <td>${blog.id}</td>
                     <td style="max-width: 300px;">${blog.title}</td>
+                    <td>${blog.user_id || 'N/A'}</td>
                     <td>${blog.author_name}</td>
                     <td>${blog.category}</td>
                     <td><span class="badge ${statusClass}">${blog.status}</span></td>
@@ -885,7 +889,6 @@ async function loadBlogs() {
         console.error('Error loading blogs:', error);
     }
 }
-
 // Approve blog
 async function approveBlog(blogId) {
     try {

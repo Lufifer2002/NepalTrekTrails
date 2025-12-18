@@ -2,6 +2,21 @@
 require_once "config.php";
 require_once "utils.php";
 
+// Add CORS headers
+// For credentialed requests, we need to specify the exact origin instead of *
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*';
+header("Access-Control-Allow-Origin: $origin");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 // Only allow access via POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(["status" => "error", "message" => "Method not allowed"], 405);
@@ -22,6 +37,13 @@ if ($action === "list") {
         // Updated query to include the new payment fields and use consistent column names
         $stmt = $pdo->query("SELECT id, user_id, package_id, package_name, customer_name, customer_name as name, email, email as customer_email, phone, people_count, travel_date, payment_option, special_requests, status, transaction_id, paid_amount, total_amount, created_at FROM bookings ORDER BY created_at DESC");
         $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Debug: Check if user_id is present in the data
+        foreach ($bookings as &$booking) {
+            if (!isset($booking['user_id']) || $booking['user_id'] === null) {
+                $booking['user_id'] = 'N/A';
+            }
+        }
         
         jsonResponse(["status" => "success", "data" => $bookings]);
     } catch (PDOException $e) {

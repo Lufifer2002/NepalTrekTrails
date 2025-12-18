@@ -14,12 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Get all blogs for admin
+// Get all blogs for admin with user data
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = $pdo->prepare("
-            SELECT * FROM blogs 
-            ORDER BY created_at DESC
+            SELECT b.*, u.name as user_name, u.email as user_email 
+            FROM blogs b 
+            LEFT JOIN users u ON b.user_id = u.id
+            ORDER BY b.created_at DESC
         ");
         $stmt->execute();
         $blogs = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -2,6 +2,20 @@
 session_start();
 require_once "config.php";
 
+// Add CORS headers
+// For credentialed requests, we need to specify the exact origin instead of *
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*';
+header("Access-Control-Allow-Origin: $origin");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 // -----------------------------
 // 1. Validate form submission
 // -----------------------------

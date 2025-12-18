@@ -1,7 +1,10 @@
 <?php
 // Only set headers if we're in a web context (not CLI)
 if (php_sapi_name() !== 'cli') {
-    header("Access-Control-Allow-Origin: *");
+    // For credentialed requests, we need to specify the exact origin instead of *
+    $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*';
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') { 

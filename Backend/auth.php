@@ -6,7 +6,10 @@ require_once "config.php";
 require_once "utils.php";
 
 // Add CORS headers
-header("Access-Control-Allow-Origin: *");
+// For credentialed requests, we need to specify the exact origin instead of *
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*';
+header("Access-Control-Allow-Origin: $origin");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
