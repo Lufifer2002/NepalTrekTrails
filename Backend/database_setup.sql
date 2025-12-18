@@ -40,6 +40,9 @@ CREATE TABLE IF NOT EXISTS bookings (
     payment_option VARCHAR(50),
     special_requests TEXT,
     status VARCHAR(50) DEFAULT 'pending',
+    total_amount DECIMAL(10, 2) DEFAULT 0.00,
+    paid_amount DECIMAL(10, 2) DEFAULT 0.00,
+    transaction_id VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE SET NULL
@@ -65,6 +68,11 @@ INSERT INTO packages (name, description, duration, price, difficulty, image_url)
 ('Everest Base Camp Trek', 'Experience the world''s highest peak with this iconic trek to Everest Base Camp. Journey through Sherpa villages and witness breathtaking mountain views.', 14, 1299.00, 'Challenging', 'https://api.luxuryholidaynepal.com/media/attachments/media-1f303bbb-1756878207.jpg'),
 ('Annapurna Circuit Trek', 'A diverse trek through varied landscapes, cultures, and stunning mountain views. One of the most popular treks in Nepal.', 18, 1499.00, 'Difficult', 'https://www.nepaltrekhub.com/wp-content/uploads/2020/12/tilicho-lake-trek.jpg'),
 ('Langtang Valley Trek', 'A beautiful valley trek with rich culture and breathtaking mountain scenery. Perfect for those seeking a shorter trek.', 10, 899.00, 'Moderate', 'https://completewellbeing.com/wp-content/uploads/2014/04/discover-the-beauty-of-trekking.jpg');
+
+-- Add payment fields to existing bookings table (for databases created before these fields were added)
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS total_amount DECIMAL(10, 2) DEFAULT 0.00;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS paid_amount DECIMAL(10, 2) DEFAULT 0.00;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS transaction_id VARCHAR(100);
 
 -- Display success message
 SELECT 'Database setup completed successfully!' AS Message;

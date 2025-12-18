@@ -71,15 +71,16 @@ try {
     $stmt = $pdo->prepare("
         INSERT INTO bookings (
             user_id, package_id, package_name, customer_name, email, phone, 
-            people_count, travel_date, payment_option, special_requests, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            people_count, travel_date, payment_option, special_requests, status, total_amount
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
     
     $status = "pending"; // Initially set to pending
+    $totalAmount = $amount * $peopleCount; // Calculate total amount
     
     $stmt->execute([
         $userId, $packageId, $packageName, $customerName, $customerEmail, $customerPhone,
-        $peopleCount, $travelDate, $paymentOption, $specialRequest, $status
+        $peopleCount, $travelDate, $paymentOption, $specialRequest, $status, $totalAmount
     ]);
     
     $bookingId = $pdo->lastInsertId();

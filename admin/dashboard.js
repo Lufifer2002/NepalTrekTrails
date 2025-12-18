@@ -517,7 +517,7 @@ async function loadBookings() {
                     <td>${booking.package_name || 'N/A'}</td>
                     <td>${booking.customer_name || booking.name || 'N/A'}</td>
                     <td>${booking.customer_email || booking.email || 'N/A'}</td>
-                    <td>${booking.people_count || booking.email || 'N/A'}</td>
+                    <td>${booking.people_count || 'N/A'}</td>
                     <td>${booking.travel_date || 'N/A'}</td>
                     <td>${booking.status || 'Pending'}</td>
                     <td>Rs. ${totalAmount > 0 ? totalAmount.toFixed(2) : '0.00'}</td>
