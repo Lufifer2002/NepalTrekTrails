@@ -27,6 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Add event listener for people count dropdown to update price
+    const peopleCountDropdown = document.getElementById('peopleCount');
+    if (peopleCountDropdown) {
+        peopleCountDropdown.addEventListener('change', updateTotalPrice);
+    }
+    
     // Book now button
     const bookNowBtn = document.getElementById('bookNowBtn');
     if (bookNowBtn) {
@@ -47,6 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (e) {
                 console.warn('Error parsing user data:', e);
             }
+            
+            // Update the total price when opening the modal
+            updateTotalPrice();
             
             document.getElementById('bookingModal').style.display = 'block';
         });
@@ -98,6 +107,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
 });
 
+// Global variable to store the base price per person
+let basePricePerPerson = 0;
+
+// Function to update the total price based on number of people
+function updateTotalPrice() {
+    // Get the base price per person from the modal
+    const basePriceElement = document.getElementById('modalPackagePrice');
+    if (!basePriceElement) return;
+    
+    // Get the people count
+    const peopleCountElement = document.getElementById('peopleCount');
+    if (!peopleCountElement) return;
+    
+    const peopleCount = parseInt(peopleCountElement.value) || 1;
+    
+    // Calculate total price
+    const totalPrice = basePricePerPerson * peopleCount;
+    
+    // Update the displayed price
+    basePriceElement.textContent = totalPrice.toFixed(2);
+}
+
 // Load package details
 async function loadPackageDetails(id) {
     try {
@@ -126,6 +157,12 @@ async function loadPackageDetails(id) {
             document.getElementById('modalPackageName').textContent = pkg.name;
             document.getElementById('modalPackageDuration').textContent = `${pkg.duration} days`;
             document.getElementById('modalPackagePrice').textContent = parseFloat(pkg.price).toFixed(2);
+            
+            // Store the base price per person for calculations
+            basePricePerPerson = parseFloat(pkg.price) || 0;
+            
+            // Initialize the total price display
+            updateTotalPrice();
             
             // Load additional package information
             loadAdditionalPackageInfo(pkg);
@@ -798,7 +835,7 @@ async function submitBooking() {
             travel_date: document.getElementById('travelDate').value,
             payment_option: document.getElementById('paymentOption').value,
             special_requests: document.getElementById('specialRequests').value,
-            total_amount: parseFloat(document.getElementById('modalPackagePrice').textContent) // Add total amount
+            total_amount: basePricePerPerson * parseInt(document.getElementById('peopleCount').value)
         };
         
         // Validate that email matches logged in user
@@ -848,7 +885,7 @@ async function submitBooking() {
             
             if (data.status === 'success') {
                 // Generate a unique transaction ID for eSewa (booking ID + timestamp)
-                const amount = parseFloat(document.getElementById('modalPackagePrice').textContent);
+                const amount = basePricePerPerson * parseInt(document.getElementById('peopleCount').value);
                 // Calculate 10% deposit instead of full amount
                 const depositAmount = amount * 0.10;
                 const bookingId = data.booking_id;
