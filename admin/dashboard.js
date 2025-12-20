@@ -320,6 +320,9 @@ function closePackageModal() {
 
 // Save package (add or edit)
 async function savePackage() {
+    // Update hidden fields first to ensure all data is captured
+    updateHiddenFields();
+    
     // Get form values
     const id = document.getElementById('packageId').value;
     const name = document.getElementById('packageName').value;
@@ -339,10 +342,49 @@ async function savePackage() {
     const dailyItinerary = collectDailyItinerary();
     const whatsIncluded = collectWhatsIncluded();
     
-    // Validation
+    // Highlight empty required fields
+    highlightEmptyFields();
+    
+    // Comprehensive validation - ensure ALL fields are filled
     if (!name || !description || !duration || !price || !difficulty) {
-        alert('Please fill in all required fields');
+        showError('Please fill in all required basic fields (Name, Description, Duration, Price, Difficulty)');
         return;
+    }
+        
+    // Validate trek highlights
+    if (!validateTrekHighlights()) {
+        showError('Please add at least one valid trek highlight');
+        return;
+    }
+        
+    // Validate daily itinerary
+    if (!validateDailyItinerary()) {
+        showError('Please add at least one day with a title to the itinerary');
+        return;
+    }
+        
+    // Validate what's included
+    if (!validateWhatsIncluded()) {
+        showError('Please add at least one valid item to "What\'s Included"');
+        return;
+    }
+        
+    // For new packages, require all images
+    if (!id) {  // Only for new packages
+        if (!imageFile) {
+            showError('Please select a main package image');
+            return;
+        }
+            
+        if (galleryFiles.length === 0 && !galleryUrls) {
+            showError('Please add at least one gallery image');
+            return;
+        }
+            
+        if (!mapImageFile && !mapImageUrl) {
+            showError('Please add a trek route map image');
+            return;
+        }
     }
     
     // For new packages or when image is changed, require image upload
@@ -1156,6 +1198,9 @@ function addHighlightItem() {
     
     // Update hidden field
     updateHiddenFields();
+    
+    // Remove any existing error highlighting
+    highlightEmptyFields();
 }
 
 function removeHighlightItem(button) {
@@ -1203,6 +1248,9 @@ function addItineraryDay() {
     
     // Update hidden field
     updateHiddenFields();
+    
+    // Remove any existing error highlighting
+    highlightEmptyFields();
 }
 
 function removeItineraryDay(button) {
@@ -1239,6 +1287,9 @@ function addIncludedItem() {
     
     // Update hidden field
     updateHiddenFields();
+    
+    // Remove any existing error highlighting
+    highlightEmptyFields();
 }
 
 function removeIncludedItem(button) {
@@ -1279,6 +1330,20 @@ function collectTrekHighlights() {
     return highlights.join('\n');
 }
 
+// Validate trek highlights - ensure at least one highlight is entered
+function validateTrekHighlights() {
+    const highlightInputs = document.querySelectorAll('.highlight-input');
+    let hasValidHighlight = false;
+    
+    highlightInputs.forEach(input => {
+        if (input.value.trim()) {
+            hasValidHighlight = true;
+        }
+    });
+    
+    return hasValidHighlight;
+}
+
 // Collect daily itinerary data
 function collectDailyItinerary() {
     const dayElements = document.querySelectorAll('.itinerary-day');
@@ -1300,6 +1365,21 @@ function collectDailyItinerary() {
     return itinerary.join('\n');
 }
 
+// Validate daily itinerary - ensure at least one day with title is entered
+function validateDailyItinerary() {
+    const dayElements = document.querySelectorAll('.itinerary-day');
+    let hasValidDay = false;
+    
+    dayElements.forEach(dayElement => {
+        const title = dayElement.querySelector('.day-title').value.trim();
+        if (title) {
+            hasValidDay = true;
+        }
+    });
+    
+    return hasValidDay;
+}
+
 // Collect what's included data
 function collectWhatsIncluded() {
     const includedInputs = document.querySelectorAll('.included-input');
@@ -1314,11 +1394,81 @@ function collectWhatsIncluded() {
     return includedItems.join('\n');
 }
 
+// Validate what's included - ensure at least one item is entered
+function validateWhatsIncluded() {
+    const includedInputs = document.querySelectorAll('.included-input');
+    let hasValidItem = false;
+    
+    includedInputs.forEach(input => {
+        if (input.value.trim()) {
+            hasValidItem = true;
+        }
+    });
+    
+    return hasValidItem;
+}
+
 // Update hidden fields with collected data
 function updateHiddenFields() {
     document.getElementById('trekHighlights').value = collectTrekHighlights();
     document.getElementById('dailyItinerary').value = collectDailyItinerary();
     document.getElementById('whatsIncluded').value = collectWhatsIncluded();
+}
+
+// Highlight empty required fields
+function highlightEmptyFields() {
+    // Remove existing highlights first
+    const requiredFields = document.querySelectorAll('.form-control');
+    requiredFields.forEach(field => {
+        field.classList.remove('required-empty');
+    });
+    
+    // Highlight basic required fields
+    const packageName = document.getElementById('packageName');
+    const packageDescription = document.getElementById('packageDescription');
+    const packageDuration = document.getElementById('packageDuration');
+    const packagePrice = document.getElementById('packagePrice');
+    const packageDifficulty = document.getElementById('packageDifficulty');
+    
+    if (!packageName.value.trim()) packageName.classList.add('required-empty');
+    if (!packageDescription.value.trim()) packageDescription.classList.add('required-empty');
+    if (!packageDuration.value.trim()) packageDuration.classList.add('required-empty');
+    if (!packagePrice.value.trim()) packagePrice.classList.add('required-empty');
+    if (!packageDifficulty.value.trim()) packageDifficulty.classList.add('required-empty');
+    
+    // Highlight dynamic fields
+    const highlightInputs = document.querySelectorAll('.highlight-input');
+    highlightInputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.classList.add('required-empty');
+        } else {
+            input.classList.remove('required-empty');
+        }
+    });
+    
+    const dayTitles = document.querySelectorAll('.day-title');
+    dayTitles.forEach(input => {
+        if (!input.value.trim()) {
+            input.classList.add('required-empty');
+        } else {
+            input.classList.remove('required-empty');
+        }
+    });
+    
+    const includedInputs = document.querySelectorAll('.included-input');
+    includedInputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.classList.add('required-empty');
+        } else {
+            input.classList.remove('required-empty');
+        }
+    });
+}
+
+// Show error message
+function showError(message) {
+    alert(message);
+    // You could also implement a more sophisticated error display here
 }
 
 // Add event listeners to update hidden fields when inputs change
@@ -1329,7 +1479,12 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.classList.contains('day-number') || 
             e.target.classList.contains('day-title') || 
             e.target.classList.contains('day-description') || 
-            e.target.classList.contains('included-input')) {
+            e.target.classList.contains('included-input') ||
+            e.target.classList.contains('form-control')) {
+            // Remove error highlighting when user starts typing
+            if (e.target.classList.contains('required-empty')) {
+                e.target.classList.remove('required-empty');
+            }
             updateHiddenFields();
         }
     });
@@ -1341,7 +1496,10 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.classList.contains('remove-included') ||
             e.target.textContent.includes('Add Another')) {
             // Small delay to ensure DOM is updated
-            setTimeout(updateHiddenFields, 100);
+            setTimeout(function() {
+                updateHiddenFields();
+                highlightEmptyFields(); // Re-check empty fields
+            }, 100);
         }
     });
 });

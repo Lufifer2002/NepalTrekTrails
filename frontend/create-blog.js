@@ -12,6 +12,35 @@ document.addEventListener('DOMContentLoaded', function() {
     if (blogImageInput) {
         blogImageInput.addEventListener('change', previewImage);
     }
+    
+    // Add event listeners to remove highlighting when user starts typing
+    const requiredFields = ['blogTitle', 'blogCategory', 'blogContent'];
+    requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function() {
+                this.classList.remove('required-empty');
+                const label = document.querySelector(`label[for="${fieldId}"]`);
+                if (label) {
+                    label.classList.remove('required-label');
+                }
+            });
+        }
+    });
+    
+    // For file input, remove highlighting when a file is selected
+    const blogImage = document.getElementById('blogImage');
+    if (blogImage) {
+        blogImage.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                this.parentElement.classList.remove('required-empty');
+                const label = document.querySelector('label[for="blogImage"]');
+                if (label) {
+                    label.classList.remove('required-label');
+                }
+            }
+        });
+    }
 });
 
 // Preview selected image
@@ -37,23 +66,37 @@ function removeImage() {
 async function handleBlogSubmit(e) {
     e.preventDefault();
     
+    // Highlight empty required fields
+    highlightEmptyFields();
+    
     // Check if user is logged in
     const loggedUserRaw = localStorage.getItem('loggedUser');
     if (!loggedUserRaw) {
-        alert('Please login to create a blog post.');
+        showError('Please login to create a blog post.');
         window.location.href = 'auth.html';
+        return;
+    }
+    
+    // Get form values
+    const title = document.getElementById('blogTitle').value;
+    const category = document.getElementById('blogCategory').value;
+    const imageFile = document.getElementById('blogImage').files[0];
+    const content = document.getElementById('blogContent').value;
+    
+    // Validate all fields are filled
+    if (!title || !category || !content || !imageFile) {
+        showError('Please fill in all required fields (Title, Category, Featured Image, Content)');
+        return;
+    }
+    
+    // Validate content length
+    if (content.trim().length < 50) {
+        showError('Blog content must be at least 50 characters long');
         return;
     }
     
     try {
         const userData = JSON.parse(loggedUserRaw);
-        
-        // First, upload the image
-        const imageFile = document.getElementById('blogImage').files[0];
-        if (!imageFile) {
-            alert('Please select an image for your blog post.');
-            return;
-        }
         
         // Show loading state
         const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -116,6 +159,61 @@ async function handleBlogSubmit(e) {
         submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Blog';
         submitBtn.disabled = false;
     }
+}
+
+// Highlight empty required fields
+function highlightEmptyFields() {
+    // Remove existing error highlights
+    const errorElements = document.querySelectorAll('.required-empty, .required-label');
+    errorElements.forEach(el => {
+        el.classList.remove('required-empty', 'required-label');
+    });
+    
+    // Check required fields
+    const requiredFields = [
+        'blogTitle',
+        'blogCategory',
+        'blogImage',
+        'blogContent'
+    ];
+    
+    let firstEmptyField = null;
+    
+    requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            if ((field.type === 'file' && !field.files.length) || 
+                (field.type !== 'file' && !field.value.trim())) {
+                // Highlight the field
+                if (field.type === 'file') {
+                    field.parentElement.classList.add('required-empty');
+                } else {
+                    field.classList.add('required-empty');
+                }
+                
+                // Highlight the label
+                const label = document.querySelector(`label[for="${fieldId}"]`);
+                if (label) {
+                    label.classList.add('required-label');
+                }
+                
+                // Store first empty field for focus
+                if (!firstEmptyField) {
+                    firstEmptyField = field;
+                }
+            }
+        }
+    });
+    
+    // Focus on first empty field
+    if (firstEmptyField) {
+        firstEmptyField.focus();
+    }
+}
+
+// Show error message
+function showError(message) {
+    alert(message);
 }
 
 // Check login status

@@ -120,6 +120,23 @@
             margin: 0;
             color: #2c3e50;
         }
+        
+        /* Required field highlighting */
+        .required-empty {
+            border-color: #e74c3c !important;
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important;
+            background-color: #fdf2f2 !important;
+        }
+        
+        .required-label {
+            color: #e74c3c !important;
+            font-weight: bold !important;
+        }
+        
+        .required-empty:focus {
+            border-color: #c0392b !important;
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3) !important;
+        }
     </style>
 </head>
 <body>

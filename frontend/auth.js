@@ -141,7 +141,12 @@ async function registerUser() {
       button.disabled = false;
       button.innerHTML = originalText;
       
-      showMessage("❌ " + (data.message || "Registration failed. Please try again."), "error");
+      // Handle duplicate email specifically
+      if (data.message && data.message.includes("Email already registered")) {
+        showMessage("🏔️ This email is already registered. Please use a different email or login instead.", "error");
+      } else {
+        showMessage("❌ " + (data.message || "Registration failed. Please try again."), "error");
+      }
     }
   } catch (error) {
     // Reset button
