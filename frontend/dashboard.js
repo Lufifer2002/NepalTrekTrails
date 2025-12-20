@@ -38,10 +38,14 @@ function checkLoginStatus() {
   const loggedUserRaw = localStorage.getItem("loggedUser");
   const profileContainer = document.querySelector(".profile-container");
   const usernameDisplay = document.getElementById("username-display");
-  
+  const usernameName = document.getElementById("username-name");
+  const getStartedBtn = document.getElementById("getStartedBtn"); // ✅ FIX
+
+  // USER NOT LOGGED IN
   if (!loggedUserRaw) {
     if (profileContainer) profileContainer.style.display = "none";
     if (usernameDisplay) usernameDisplay.style.display = "none";
+    if (getStartedBtn) getStartedBtn.style.display = "inline-block";
     return;
   }
 
@@ -53,23 +57,17 @@ function checkLoginStatus() {
     return;
   }
 
+  // USER LOGGED IN
   if (userData && userData.name) {
-    // Display username on left
-    const usernameDisplay = document.getElementById("username-display");
-    const usernameName = document.getElementById("username-name");
-    const profileContainer = document.querySelector(".profile-container");
+    if (usernameName) usernameName.textContent = userData.name;
+    if (usernameDisplay) usernameDisplay.style.display = "block";
+    if (profileContainer) profileContainer.style.display = "block";
 
-    if (usernameDisplay && usernameName) {
-      usernameName.textContent = userData.name;
-      usernameDisplay.style.display = "block";
-    }
-    
-    // Show profile container
-    if (profileContainer) {
-      profileContainer.style.display = "block";
-    }
+    // ✅ HIDE GET STARTED BUTTON
+    if (getStartedBtn) getStartedBtn.style.display = "none";
   }
 }
+
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
