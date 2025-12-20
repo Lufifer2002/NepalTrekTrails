@@ -2,17 +2,35 @@
 const API_BASE = "../Backend";
 
 // Utility: Show message
+let messageTimeout = null;
+
 function showMessage(text, type = "error") {
+  console.log('Showing message:', text, 'Type:', type);
   const msg = document.getElementById("message");
-  msg.innerHTML = text;
-  msg.className = "message " + type;
-  msg.style.display = "block";
-  
-  // Auto-hide success messages after 3 seconds
-  if (type === "success") {
-    setTimeout(() => {
-      msg.style.display = "none";
-    }, 3000);
+  console.log('Message element:', msg);
+  if (msg) {
+    // Clear any existing timeout
+    if (messageTimeout) {
+      clearTimeout(messageTimeout);
+      messageTimeout = null;
+    }
+    
+    console.log('Setting message content:', text);
+    msg.innerHTML = text;
+    msg.className = "message " + type;
+    msg.style.display = "block";
+    console.log('Message displayed with class:', msg.className);
+    console.log('Message display style:', msg.style.display);
+    
+    // Auto-hide success messages after 3 seconds
+    if (type === "success") {
+      messageTimeout = setTimeout(() => {
+        msg.style.display = "none";
+        messageTimeout = null;
+      }, 3000);
+    }
+  } else {
+    console.error('Message element not found!');
   }
 }
 
@@ -141,10 +159,22 @@ async function registerUser() {
       button.disabled = false;
       button.innerHTML = originalText;
       
+      // Log the error data for debugging
+      console.log('Registration error response:', data);
+      console.log('Response status:', response.status);
+      
+      // Hide any success message that might be displayed
+      const msgElement = document.getElementById("message");
+      if (msgElement && msgElement.classList.contains('message') && msgElement.classList.contains('success')) {
+        msgElement.style.display = "none";
+      }
+      
       // Handle duplicate email specifically
-      if (data.message && data.message.includes("Email already registered")) {
+      if ((data.message && data.message.includes("Email already registered")) || response.status === 409) {
+        console.log('Showing duplicate email message');
         showMessage("🏔️ This email is already registered. Please use a different email or login instead.", "error");
       } else {
+        console.log('Showing generic error message:', data.message);
         showMessage("❌ " + (data.message || "Registration failed. Please try again."), "error");
       }
     }
@@ -154,6 +184,7 @@ async function registerUser() {
     button.innerHTML = originalText;
     
     console.error('Registration error:', error);
+    console.error('Full error details:', error.message, error.stack);
     showMessage("❌ Network error. Please check your connection and try again.", "error");
   }
 }

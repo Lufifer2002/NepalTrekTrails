@@ -232,6 +232,7 @@ body::before {
   justify-content: center;
   background-color: white;
   position: relative;
+  overflow-y: auto;
 }
 
 .right-panel::before {
@@ -248,6 +249,8 @@ body::before {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
+  position: relative;
+  z-index: 10;
 }
 
 /* ... Rest of your existing right panel CSS remains the same ... */
@@ -455,6 +458,8 @@ body::before {
   font-weight: 500;
   display: none;
   border-left: 4px solid #0b7d3a;
+  position: relative;
+  z-index: 20;
 }
 
 .message.success {

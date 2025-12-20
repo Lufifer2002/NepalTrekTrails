@@ -88,6 +88,7 @@ if ($action === "login") {
         $stmt->execute([$email]);
         
         if ($stmt->fetch()) {
+            error_log("Duplicate email detected: " . $email);
             jsonResponse(["status" => "error", "message" => "Email already registered"], 409);
         }
         
@@ -110,7 +111,9 @@ if ($action === "login") {
             ]
         ]);
     } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage() . " Code: " . $e->getCode());
         if ($e->getCode() == 23000) { // Duplicate entry
+            error_log("Database duplicate entry for email: " . $email);
             jsonResponse(["status" => "error", "message" => "Email already registered"], 409);
         } else {
             jsonResponse(["status" => "error", "message" => "Database error occurred"], 500);
