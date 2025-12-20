@@ -180,7 +180,7 @@ async function loadPackages() {
                     <td>${pkg.id}</td>
                     <td>${pkg.name}</td>
                     <td>${pkg.duration || 'N/A'} days</td>
-                    <td>$${parseFloat(pkg.price).toFixed(2)}</td>
+                    <td>Rs${parseFloat(pkg.price).toFixed(2)}</td>
                     <td>
                         <button class="btn btn-primary btn-sm edit-package" data-id="${pkg.id}">
                             <i class="fas fa-edit"></i> Edit
