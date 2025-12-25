@@ -30,7 +30,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listener for people count dropdown to update price
     const peopleCountDropdown = document.getElementById('peopleCount');
     if (peopleCountDropdown) {
-        peopleCountDropdown.addEventListener('change', updateTotalPrice);
+        peopleCountDropdown.addEventListener('change', function() {
+            updateTotalPrice();
+            updateEsewaAmount(); // Update eSewa amount when people count changes
+        });
+    }
+    
+    // Add event listener for payment option dropdown to show/hide eSewa amount
+    const paymentOptionDropdown = document.getElementById('paymentOption');
+    if (paymentOptionDropdown) {
+        paymentOptionDropdown.addEventListener('change', function() {
+            updateEsewaAmountDisplay();
+        });
     }
     
     // Book now button
@@ -127,6 +138,40 @@ function updateTotalPrice() {
     
     // Update the displayed price
     basePriceElement.textContent = totalPrice.toFixed(2);
+}
+
+// Function to update the eSewa amount based on number of people
+function updateEsewaAmount() {
+    // Get the people count
+    const peopleCountElement = document.getElementById('peopleCount');
+    if (!peopleCountElement) return;
+    
+    const peopleCount = parseInt(peopleCountElement.value) || 1;
+    
+    // Calculate total price
+    const totalPrice = basePricePerPerson * peopleCount;
+    
+    // Calculate 10% deposit amount for eSewa
+    const depositAmount = totalPrice * 0.10;
+    
+    // Update the eSewa amount display
+    const esewaAmountElement = document.getElementById('esewaAmountValue');
+    if (esewaAmountElement) {
+        esewaAmountElement.textContent = depositAmount.toFixed(2);
+    }
+}
+
+// Function to show/hide eSewa amount based on selected payment option
+function updateEsewaAmountDisplay() {
+    const paymentOption = document.getElementById('paymentOption').value;
+    const esewaAmountDisplay = document.getElementById('esewaAmountDisplay');
+    
+    if (paymentOption === 'Esewa') {
+        esewaAmountDisplay.style.display = 'block';
+        updateEsewaAmount(); // Update the amount when eSewa is selected
+    } else {
+        esewaAmountDisplay.style.display = 'none';
+    }
 }
 
 // Load package details
