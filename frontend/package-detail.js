@@ -323,7 +323,7 @@ async function loadBookingDetails(bookingId) {
                 if (booking.status === 'pending' || booking.status === 'failed') {
                     actionButtonsHTML = `
                         <div class="booking-actions-detail">
-                            <button class="btn btn-primary" onclick="retryPayment(${booking.id}, ${parseFloat(booking.total_amount || 0)})">
+                            <button class="btn btn-primary" onclick="retryPayment(${booking.id}, ${parseFloat(booking.total_amount || 0)}, ${parseFloat(booking.paid_amount || 0)})">
                                 <i class="fas fa-credit-card"></i> Pay Now
                             </button>
                             <button class="btn btn-secondary" onclick="cancelBookingFromDetail(${booking.id})">
@@ -1192,9 +1192,32 @@ function cancelBookingFromDetail(bookingId) {
 }
 
 // Retry payment for a booking
-function retryPayment(bookingId, totalAmount) {
-    // Redirect to payment page
-    window.location.href = `../Backend/esewaPay.php?orderId=${bookingId}_${Date.now()}&bookingId=${bookingId}&amount=${totalAmount * 0.1}`;
+function retryPayment(bookingId, totalAmount, paidAmount = 0) {
+    // Calculate the amount to pay
+    // For retry payment, we should calculate the remaining balance
+    // If no payment has been made yet (paidAmount is 0), take 10% deposit
+    // If some payment has been made, calculate the remaining balance
+    
+    let amountToPay;
+    if (paidAmount === 0) {
+        // If no payment has been made yet, take 10% deposit
+        amountToPay = totalAmount * 0.10;
+    } else {
+        // If there's already a payment, calculate the remaining balance
+        // For this implementation, we'll assume the user wants to pay the remaining balance
+        // But to follow the 10% deposit model, we might want to adjust this
+        const remainingBalance = totalAmount - paidAmount;
+        amountToPay = remainingBalance;
+    }
+    
+    // Ensure the amount to pay is not negative or zero
+    if (amountToPay <= 0) {
+        alert('No amount is due for payment.');
+        return;
+    }
+    
+    // Redirect to payment page with the calculated amount
+    window.location.href = `../Backend/esewaPay.php?orderId=${bookingId}_${Date.now()}&bookingId=${bookingId}&amount=${amountToPay}`;
 }
 
 // Set minimum date to today to prevent selecting past dates

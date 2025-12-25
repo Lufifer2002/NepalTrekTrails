@@ -132,7 +132,7 @@ function displayBookings(bookings) {
 
                 ${showPayNow ? `
                 <button class="btn btn-primary"
-                    onclick="retryPayment(${booking.id}, ${booking.package_price || 0})">
+                    onclick="retryPayment(${booking.id}, ${booking.total_amount || 0}, ${booking.paid_amount || 0})">
                     <i class="fas fa-credit-card"></i> Pay Now
                 </button>` : ''}
 
@@ -150,17 +150,40 @@ function displayBookings(bookings) {
 // ================================
 // Retry Payment
 // ================================
-function retryPayment(bookingId, amount) {
+function retryPayment(bookingId, totalAmount, paidAmount = 0) {
+    // Calculate the amount to pay based on booking status and payments already made
+    // If no payment has been made yet (paidAmount is 0), take 10% deposit
+    // If some payment has been made, calculate the remaining balance
+    
+    let amountToPay;
+    if (paidAmount === 0) {
+        // If no payment has been made yet, take 10% deposit
+        amountToPay = totalAmount * 0.10;
+    } else {
+        // If there's already a payment, calculate the remaining balance
+        const remainingBalance = totalAmount - paidAmount;
+        amountToPay = remainingBalance;
+    }
+    
+    // Ensure the amount to pay is not negative or zero
+    if (amountToPay <= 0) {
+        alert('No amount is due for payment.');
+        return;
+    }
+    
     const transactionId = bookingId + "_" + Date.now();
 
     localStorage.setItem("currentBooking", JSON.stringify({
         booking_id: bookingId,
         transaction_id: transactionId,
-        amount: amount
+        amount: totalAmount,
+        paid_amount: paidAmount,
+        amount_to_pay: amountToPay
     }));
 
+    // Use the calculated amount for the payment
     window.location.href =
-        `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${amount}`;
+        `../Backend/esewaPay.php?orderId=${transactionId}&bookingId=${bookingId}&amount=${amountToPay}`;
 }
 
 // ================================
