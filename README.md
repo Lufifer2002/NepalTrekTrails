@@ -26,7 +26,7 @@ Make sure MySQL is running in XAMPP.
 
 After inserting sample data, you can log in with:
 - Email: admin@nepaltrektrails.com
-- Password: SecurePass!2025
+- Password: admin123
 
 ## File Structure
 
