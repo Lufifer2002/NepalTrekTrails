@@ -81,7 +81,7 @@ function viewPackageDetails(packageId) {
     window.location.href = `package-detail.html?id=${packageId}`;
 }
 
-/* Searsh Bar */
+/* Searsh Bar ALGORITHM*/
 function filterPackages() {
   const searchValue = document
     .getElementById("packageSearch")
